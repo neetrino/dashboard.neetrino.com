@@ -1,12 +1,10 @@
 # Neetrino Project .gitignore
 
 # Исключаем все сайты в www кроме нашего проекта
-# Исключаем все папки в www кроме dashboard, shared, docs, scripts
+# Исключаем все папки в www кроме dashboard, docs
 www/*
 !www/dashboard/
-!www/shared/
 !www/docs/
-!www/scripts/
 !www/README.md
 !www/PROGRESS.md
 !www/.gitignore

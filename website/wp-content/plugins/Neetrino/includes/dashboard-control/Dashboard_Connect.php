@@ -7,7 +7,7 @@
 class Neetrino_Dashboard_Connect {
     
     // URL dashboard (реальный сервер)
-    const DASHBOARD_URL = 'https://dashbord.neetrino.com';
+    const DASHBOARD_URL = 'http://dashboard.local/';
     
     /**
      * Инициализация

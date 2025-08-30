@@ -31,7 +31,7 @@ class Neetrino_Registration {
                 $scheme = (strpos($saved_domain, 'localhost') !== false || strpos($saved_domain, '127.0.0.1') !== false) ? 'http' : 'https';
                 $dashboard_url = $scheme . '://' . rtrim($saved_domain, '/');
             } else {
-                $dashboard_url = 'https://dashbord.neetrino.com';
+                $dashboard_url = 'http://dashboard.local/';
             }
             
             error_log("NEETRINO Registration: Using Dashboard URL: " . $dashboard_url);
