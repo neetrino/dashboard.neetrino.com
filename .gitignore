@@ -1,5 +1,17 @@
 # Neetrino Project .gitignore
 
+# Исключаем все сайты в www кроме нашего проекта
+# Исключаем все папки в www кроме dashboard, plugin, shared, docs, scripts
+www/*
+!www/dashboard/
+!www/plugin/
+!www/shared/
+!www/docs/
+!www/scripts/
+!www/README.md
+!www/PROGRESS.md
+!www/.gitignore
+
 # WordPress core files (исключаем полностью)
 website/wp-admin/
 website/wp-includes/
