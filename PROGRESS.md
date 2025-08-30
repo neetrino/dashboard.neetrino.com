@@ -18,7 +18,7 @@
 
 ### 2. Компоненты
 - [x] **Dashboard** - скопирован из `www/dashboard/`
-- [x] **Plugin** - скопирован из `website/wp-content/plugins/Neetrino/`
+- [x] **Plugin** - работает в `website/wp-content/plugins/Neetrino/` (для быстрого тестирования)
 - [x] **Shared** - созданы общие функции
 
 ### 3. Общие функции (shared/)
@@ -58,7 +58,7 @@
 ```
 main/
 ├── dashboard/          # Центральная панель
-├── plugin/            # WordPress плагин
+├── website/wp-content/plugins/Neetrino/  # WordPress плагин
 ├── shared/            # Общие функции
 ├── docs/              # Документация
 └── scripts/           # Скрипты развертывания

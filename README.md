@@ -7,7 +7,7 @@
 ```
 neetrino-project/
 ├── dashboard/          # Центральная панель управления
-├── plugin/            # WordPress плагин Neetrino
+├── website/wp-content/plugins/Neetrino/  # WordPress плагин Neetrino
 ├── shared/            # Общие функции и API
 │   ├── api/           # API клиенты
 │   ├── security/      # Безопасность (подписи, валидация)

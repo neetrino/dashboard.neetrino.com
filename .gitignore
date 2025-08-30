@@ -1,16 +1,17 @@
 # Neetrino Project .gitignore
 
 # Исключаем все сайты в www кроме нашего проекта
-# Исключаем все папки в www кроме dashboard, plugin, shared, docs, scripts
+# Исключаем все папки в www кроме dashboard, shared, docs, scripts
 www/*
 !www/dashboard/
-!www/plugin/
 !www/shared/
 !www/docs/
 !www/scripts/
 !www/README.md
 !www/PROGRESS.md
 !www/.gitignore
+# Включаем наш плагин в WordPress
+!www/website/wp-content/plugins/Neetrino/
 
 # WordPress core files (исключаем полностью)
 website/wp-admin/
@@ -29,6 +30,7 @@ website/wp-content/plugins/akismet/
 website/wp-content/plugins/hello.php
 website/wp-content/plugins/index.php
 website/wp-content/plugins/Neetrino3.7.0.zip
+# НЕ исключаем наш плагин: website/wp-content/plugins/Neetrino/
 
 # WordPress config (чувствительные данные)
 website/wp-config.php
