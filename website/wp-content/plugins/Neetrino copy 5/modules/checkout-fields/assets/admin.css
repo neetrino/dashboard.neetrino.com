@@ -1,0 +1,230 @@
+/* Neetrino Checkout Fields Module - Clean Admin Styles */
+
+/* Основные стили модуля */
+.neetrino-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.neetrino-card h2 {
+    margin: 0 0 20px 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: #1e1e1e;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.neetrino-card h2 i {
+    color: #0073aa;
+    font-size: 18px;
+}
+
+/* Компактный переключатель адреса доставки */
+.neetrino-compact-shipping-toggle {
+    background: #f8f9fa;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+}
+
+.neetrino-compact-shipping-toggle h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+}
+
+.neetrino-shipping-options {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.neetrino-shipping-option {
+    position: relative;
+}
+
+.neetrino-shipping-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.neetrino-shipping-option label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    color: #666;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+.neetrino-shipping-option input[type="radio"]:checked + label {
+    background: #0073aa;
+    border-color: #0073aa;
+    color: #ffffff;
+}
+
+.neetrino-shipping-option label:hover {
+    border-color: #0073aa;
+    background: #f0f8ff;
+}
+
+.neetrino-shipping-option input[type="radio"]:checked + label:hover {
+    background: #005a87;
+}
+
+.neetrino-shipping-option .emoji {
+    font-size: 16px;
+}
+
+/* Уведомления */
+.neetrino-notice {
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    animation: slideDown 0.3s ease;
+}
+
+.neetrino-notice.success {
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.neetrino-notice.info {
+    background: #d1ecf1;
+    border: 1px solid #bee5eb;
+    color: #0c5460;
+}
+
+.neetrino-notice.warning {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+}
+
+.neetrino-notice i {
+    font-size: 16px;
+}
+
+/* Сетка полей */
+.neetrino-fields-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+/* Контейнер для полей доставки */
+.neetrino-shipping-fields-container {
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.neetrino-field-item {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    padding: 16px;
+    transition: opacity 0.3s ease;
+}
+
+.neetrino-field-item.disabled {
+    opacity: 0.5;
+    background: #f8f9fa;
+}
+
+.neetrino-field-item.shipping-disabled {
+    opacity: 0.6;
+    background: #fafafa;
+    border-color: #ddd;
+}
+
+.neetrino-field-item h4 {
+    margin: 0 0 12px 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Переключатели полей */
+.neetrino-toggle {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.neetrino-toggle input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+.neetrino-toggle label {
+    font-weight: 500;
+    color: #555;
+    cursor: pointer;
+}
+
+.neetrino-checkbox {
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.neetrino-checkbox input[type="checkbox"] {
+    margin-right: 6px;
+}
+
+.neetrino-checkbox label {
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+}
+
+/* Анимации */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .neetrino-shipping-options {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .neetrino-fields-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .neetrino-card {
+        padding: 16px;
+    }
+}

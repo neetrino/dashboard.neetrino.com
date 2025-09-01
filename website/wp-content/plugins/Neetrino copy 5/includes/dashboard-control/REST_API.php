@@ -858,18 +858,16 @@ class Neetrino_REST_API {
             // так как это системные команды, выполняемые с API ключом
             error_log('Neetrino REST API: Пропускаем проверку прав пользователя для системной команды');
             
-            // Проверяем существование класса Admin
-            error_log('Neetrino REST API: Проверяем существование класса Neetrino_Admin');
-            if (class_exists('Neetrino_Admin')) {
-                error_log('Neetrino REST API: Класс Neetrino_Admin найден, создаем экземпляр');
+            // Получаем экземпляр класса обновления
+            error_log('Neetrino REST API: Проверяем существование класса Neetrino_Plugin_Updater');
+            if (class_exists('Neetrino_Plugin_Updater')) {
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Updater найден, создаем экземпляр');
+                $updater = new Neetrino_Plugin_Updater();
                 
-                // Создаем экземпляр Admin класса
-                $admin = new Neetrino_Admin();
-                
-                // Вызываем метод обновления
-                error_log('Neetrino REST API: Вызываем perform_plugin_update()');
-                $result = $admin->perform_plugin_update();
-                error_log('Neetrino REST API: Результат perform_plugin_update(): ' . json_encode($result));
+                // Выполняем обновление
+                error_log('Neetrino REST API: Вызываем perform_direct_update()');
+                $result = $updater->perform_direct_update();
+                error_log('Neetrino REST API: Результат perform_direct_update(): ' . json_encode($result));
                 
                 if ($result['success']) {
                     error_log('Neetrino REST API: Обновление успешно, возвращаем результат');
@@ -890,10 +888,10 @@ class Neetrino_REST_API {
                     ];
                 }
             } else {
-                error_log('Neetrino REST API: Класс Neetrino_Admin не найден');
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Updater не найден');
                 return [
                     'success' => false,
-                    'message' => 'Класс администратора не найден'
+                    'message' => 'Класс обновления плагина не найден'
                 ];
             }
             
