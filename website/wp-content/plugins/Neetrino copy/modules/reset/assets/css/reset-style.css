@@ -1,0 +1,919 @@
+/* ===== NEETRINO RESET MODULE - MODERN STYLES ===== */
+
+/* === Убираем отступы WordPress === */
+.wrap {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.wrap .neetrino-reset-page {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* === Основные переменные === */
+.neetrino-reset-page {
+    --reset-danger: #dc2626;
+    --reset-danger-light: #ef4444;
+    --reset-warning: #f59e0b;
+    --reset-warning-light: #fbbf24;
+    --reset-safe: #10b981;
+    --reset-safe-light: #34d399;
+    --reset-primary: #3b82f6;
+    --reset-primary-light: #60a5fa;
+    --reset-bg-light: #f8fafc;
+    --reset-border: #e2e8f0;
+    --reset-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --reset-shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* === КРАСИВЫЙ ЗАГОЛОВОК В ЛЕВОМ УГЛУ === */
+.neetrino-reset-page .neetrino-header {
+    background: transparent;
+    padding: 0;
+    margin: 0 0 24px 0;
+    border: none;
+}
+
+.neetrino-reset-page .neetrino-header-left {
+    margin: 0 !important;
+    padding: 0 20px 0 0 !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.neetrino-reset-page .neetrino-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    color: #dc2626;
+    letter-spacing: -1px;
+}
+
+.neetrino-reset-page .neetrino-header h1 .dashicons {
+    font-size: 42px;
+    width: 42px;
+    height: 42px;
+    margin-right: 16px;
+    color: #dc2626;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: iconGlow 3s ease-in-out infinite;
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+@keyframes iconGlow {
+    0%, 100% { 
+        box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+        transform: scale(1);
+    }
+    50% { 
+        box-shadow: 0 8px 25px rgba(220, 38, 38, 0.4);
+        transform: scale(1.02);
+    }
+}
+
+.neetrino-reset-page .neetrino-header p {
+    font-size: 18px;
+    margin: 0;
+    color: #64748b;
+    font-weight: 500;
+    font-style: italic;
+    position: relative;
+    padding-left: 58px;
+    line-height: 1.4;
+}
+
+.neetrino-reset-page .neetrino-header p::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--reset-danger) 0%, transparent 100%);
+}
+
+/* === Общий layout === */
+.neetrino-reset-page {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.neetrino-reset-page .neetrino-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.neetrino-reset-page .neetrino-card {
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: var(--reset-shadow);
+    margin-bottom: 32px;
+    padding: 32px;
+    border: 1px solid var(--reset-border);
+    transition: all 0.3s ease;
+}
+
+.neetrino-reset-page .neetrino-card:hover {
+    box-shadow: var(--reset-shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* === Заголовки карточек === */
+.neetrino-card-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.neetrino-card-header p {
+    color: #64748b;
+    margin: 0 0 24px 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+/* === ГЛАВНАЯ КАРТОЧКА СБРОСА === */
+.neetrino-reset-main-card {
+    border-left: 6px solid var(--reset-danger);
+    background: linear-gradient(135deg, #fff 0%, #fef2f2 100%);
+}
+
+/* Предупреждающий баннер */
+.neetrino-reset-warning-banner {
+    display: flex;
+    align-items: flex-start;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border: 1px solid #fca5a5;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.neetrino-reset-warning-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+}
+
+.neetrino-reset-warning-icon .dashicons {
+    color: var(--reset-danger);
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.neetrino-reset-warning-content h3 {
+    color: var(--reset-danger);
+    font-size: 18px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+}
+
+.neetrino-reset-warning-content p {
+    color: #7f1d1d;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* === МЕГА-КНОПКА СБРОСА === */
+.neetrino-reset-action-container {
+    text-align: center;
+}
+
+.neetrino-reset-mega-button {
+    background: linear-gradient(135deg, var(--reset-danger) 0%, var(--reset-danger-light) 100%);
+    border: none;
+    border-radius: 20px;
+    padding: 24px 48px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+    min-width: 320px;
+    position: relative;
+    overflow: hidden;
+}
+
+.neetrino-reset-mega-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(220, 38, 38, 0.4);
+}
+
+.neetrino-reset-mega-button:active {
+    transform: translateY(-1px);
+}
+
+.neetrino-reset-mega-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.neetrino-reset-mega-button:hover::before {
+    left: 100%;
+}
+
+.neetrino-reset-button-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    position: relative;
+    z-index: 1;
+}
+
+.neetrino-reset-button-icon {
+    width: 48px;
+    height: 48px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.neetrino-reset-button-icon .dashicons {
+    color: #fff;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.neetrino-reset-button-text {
+    text-align: left;
+}
+
+.neetrino-reset-button-title {
+    display: block;
+    color: #fff;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.neetrino-reset-button-subtitle {
+    display: block;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 4px;
+}
+
+/* === ЧАСТИЧНЫЕ ИНСТРУМЕНТЫ === */
+.neetrino-partial-tools-card {
+    border-left: 6px solid var(--reset-primary);
+}
+
+.neetrino-partial-tools-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.neetrino-partial-tools-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+}
+
+.neetrino-partial-tool-compact {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background: var(--reset-bg-light);
+    border-radius: 12px;
+    border: 1px solid var(--reset-border);
+    transition: all 0.3s ease;
+}
+
+.neetrino-partial-tool-compact:hover {
+    background: #f1f5f9;
+    transform: translateY(-1px);
+    box-shadow: var(--reset-shadow);
+}
+
+.neetrino-partial-tool-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.neetrino-partial-tool-icon.safe {
+    background: linear-gradient(135deg, var(--reset-safe) 0%, var(--reset-safe-light) 100%);
+}
+
+.neetrino-partial-tool-icon.warning {
+    background: linear-gradient(135deg, var(--reset-warning) 0%, var(--reset-warning-light) 100%);
+}
+
+.neetrino-partial-tool-icon.danger {
+    background: linear-gradient(135deg, var(--reset-danger) 0%, var(--reset-danger-light) 100%);
+}
+
+.neetrino-partial-tool-icon .dashicons {
+    color: #fff;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.neetrino-partial-tool-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.neetrino-partial-tool-content strong {
+    display: block;
+    color: #1e293b;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 2px;
+}
+
+.neetrino-partial-tool-content small {
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* Компактные кнопки */
+.neetrino-btn-compact {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 80px;
+}
+
+.neetrino-btn-safe {
+    background: var(--reset-safe);
+    color: #fff;
+}
+
+.neetrino-btn-safe:hover {
+    background: var(--reset-safe-light);
+    transform: translateY(-1px);
+}
+
+.neetrino-btn-warning {
+    background: var(--reset-warning);
+    color: #fff;
+}
+
+.neetrino-btn-warning:hover {
+    background: var(--reset-warning-light);
+    transform: translateY(-1px);
+}
+
+.neetrino-btn-danger {
+    background: var(--reset-danger);
+    color: #fff;
+}
+
+.neetrino-btn-danger:hover {
+    background: var(--reset-danger-light);
+    transform: translateY(-1px);
+}
+
+/* === СНИМКИ === */
+.neetrino-snapshots-card {
+    border-left: 6px solid var(--reset-primary);
+}
+
+.neetrino-snapshot-creator {
+    margin-bottom: 32px;
+}
+
+.neetrino-snapshot-input-group {
+    display: flex;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.neetrino-input-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.neetrino-input-wrapper .dashicons {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.neetrino-modern-input {
+    width: 100%;
+    padding: 16px 16px 16px 48px;
+    border: 2px solid var(--reset-border);
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: #fff;
+}
+
+.neetrino-modern-input:focus {
+    outline: none;
+    border-color: var(--reset-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.neetrino-btn-modern {
+    padding: 16px 24px;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.neetrino-btn-primary {
+    background: linear-gradient(135deg, var(--reset-primary) 0%, var(--reset-primary-light) 100%);
+    color: #fff;
+}
+
+.neetrino-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+}
+
+/* Сетка снимков */
+.neetrino-snapshots-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.neetrino-snapshot-card {
+    background: #fff;
+    border: 1px solid var(--reset-border);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.neetrino-snapshot-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--reset-shadow);
+    border-color: var(--reset-primary);
+}
+
+.neetrino-snapshot-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--reset-primary) 0%, var(--reset-primary-light) 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.neetrino-snapshot-icon .dashicons {
+    color: #fff;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.neetrino-snapshot-info h4 {
+    color: #1e293b;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+}
+
+.neetrino-snapshot-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.neetrino-snapshot-date,
+.neetrino-snapshot-size {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.neetrino-snapshot-date .dashicons,
+.neetrino-snapshot-size .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+.neetrino-snapshot-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.neetrino-btn-icon {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.neetrino-btn-restore {
+    background: var(--reset-safe);
+    color: #fff;
+}
+
+.neetrino-btn-restore:hover {
+    background: var(--reset-safe-light);
+    transform: scale(1.1);
+}
+
+.neetrino-btn-delete {
+    background: var(--reset-danger);
+    color: #fff;
+}
+
+.neetrino-btn-delete:hover {
+    background: var(--reset-danger-light);
+    transform: scale(1.1);
+}
+
+.neetrino-btn-icon .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Пустое состояние снимков */
+.neetrino-empty-snapshots {
+    text-align: center;
+    padding: 48px 24px;
+    color: #64748b;
+}
+
+.neetrino-empty-icon {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 24px auto;
+}
+
+.neetrino-empty-icon .dashicons {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: #94a3b8;
+}
+
+.neetrino-empty-snapshots h3 {
+    color: #475569;
+    font-size: 20px;
+    margin: 0 0 8px 0;
+}
+
+.neetrino-empty-snapshots p {
+    color: #64748b;
+    margin: 0;
+}
+
+/* === МОДАЛЬНЫЕ ОКНА === */
+.neetrino-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(4px);
+    }
+}
+
+.neetrino-modal-content {
+    background: #fff;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+    transform: scale(0.9);
+    animation: modalSlideIn 0.3s ease forwards;
+}
+
+@keyframes modalSlideIn {
+    to {
+        transform: scale(1);
+    }
+}
+
+.neetrino-modal-header {
+    padding: 32px 32px 0 32px;
+    text-align: center;
+    background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+    border-bottom: none;
+}
+
+.neetrino-modal-header h3 {
+    color: var(--reset-danger);
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.neetrino-modal-header h3::before {
+    content: "⚠️";
+    font-size: 32px;
+}
+
+.neetrino-modal-body {
+    padding: 32px;
+    text-align: center;
+}
+
+.neetrino-modal-body p {
+    margin: 0 0 20px 0;
+    line-height: 1.7;
+    font-size: 16px;
+    color: #374151;
+}
+
+.neetrino-modal-body p:first-child {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.neetrino-modal-body ul {
+    margin: 0 0 20px 0;
+    padding: 0;
+    list-style: none;
+    background: #f8fafc;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.neetrino-modal-body li {
+    margin-bottom: 12px;
+    padding-left: 24px;
+    position: relative;
+    color: #374151;
+}
+
+.neetrino-modal-body li::before {
+    content: "🗑️";
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+.neetrino-modal-body li:last-child {
+    margin-bottom: 0;
+}
+
+.neetrino-modal-footer {
+    padding: 0 32px 32px 32px;
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+}
+
+.neetrino-button {
+    padding: 18px 40px;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 140px;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.neetrino-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.neetrino-button:hover::before {
+    left: 100%;
+}
+
+.neetrino-button-secondary {
+    background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 25px rgba(107, 114, 128, 0.3) !important;
+    border: none !important;
+}
+
+.neetrino-button-secondary:hover {
+    background: linear-gradient(135deg, #4b5563 0%, #6b7280 100%) !important;
+    color: #fff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(107, 114, 128, 0.4) !important;
+}
+
+/* Принудительные стили для кнопки НЕТ */
+#cancel-reset {
+    background: #6b7280 !important;
+    color: #fff !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+#cancel-reset:hover {
+    background: #4b5563 !important;
+    color: #fff !important;
+}
+
+.neetrino-button-danger {
+    background: linear-gradient(135deg, var(--reset-danger) 0%, var(--reset-danger-light) 100%) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3) !important;
+    border: none !important;
+}
+
+.neetrino-button-danger:hover {
+    background: linear-gradient(135deg, #b91c1c 0%, var(--reset-danger) 100%) !important;
+    color: #fff !important;
+    transform: translateY(-3px);
+    box-shadow: 0 15px 35px rgba(220, 38, 38, 0.5) !important;
+}
+
+/* Принудительные стили для кнопки ДА */
+#confirm-reset {
+    background: #dc2626 !important;
+    color: #fff !important;
+    border: none !important;
+    text-decoration: none !important;
+}
+
+#confirm-reset:hover {
+    background: #b91c1c !important;
+    color: #fff !important;
+}
+
+/* === АДАПТИВНОСТЬ === */
+@media (max-width: 768px) {
+    .neetrino-reset-page .neetrino-header-left {
+        padding: 0 16px;
+    }
+    
+    .neetrino-reset-page .neetrino-header h1 {
+        font-size: 36px;
+    }
+    
+    .neetrino-reset-page .neetrino-header h1 .dashicons {
+        font-size: 36px;
+        width: 36px;
+        height: 36px;
+        margin-right: 14px;
+    }
+    
+    .neetrino-reset-page .neetrino-header p {
+        font-size: 16px;
+        padding-left: 50px;
+    }
+    
+    .neetrino-reset-page .neetrino-header p::before {
+        width: 32px;
+    }
+    
+    .neetrino-reset-page .neetrino-content {
+        padding: 0 16px;
+    }
+    
+    .neetrino-reset-page .neetrino-card {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .neetrino-partial-tools-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .neetrino-snapshot-input-group {
+        flex-direction: column;
+    }
+    
+    .neetrino-snapshots-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .neetrino-reset-mega-button {
+        min-width: 280px;
+        padding: 20px 32px;
+    }
+    
+    .neetrino-reset-button-title {
+        font-size: 20px;
+    }
+}
+
+/* === АНИМАЦИИ ЗАГРУЗКИ === */
+.neetrino-loading {
+    opacity: 0.6;
+    pointer-events: none;
+    position: relative;
+}
+
+.neetrino-loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #fff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}

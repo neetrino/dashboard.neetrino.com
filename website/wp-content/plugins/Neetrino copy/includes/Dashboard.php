@@ -63,12 +63,7 @@ class Neetrino_Dashboard {
                 <div>
                     <h1>
                         <img src="<?php echo esc_url(plugin_dir_url(NEETRINO_PLUGIN_FILE) . 'includes/Neetrino-Logo.png'); ?>" alt="Neetrino Logo" class="neetrino-header-logo">
-                        <span class="neetrino-header-title">NEETRINO IT COMPANY</span>
                     </h1>
-                    <div class="neetrino-version-display">
-                        <span class="version-label">Версия плагина:</span>
-                        <span class="version-number">v<?php echo esc_html($version); ?></span>
-                    </div>
                 </div>
             </div>
             <div class="neetrino-header-right">

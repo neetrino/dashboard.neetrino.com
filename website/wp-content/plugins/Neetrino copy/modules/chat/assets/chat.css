@@ -1,0 +1,433 @@
+/* Neetrino Chat Widget Styles */
+.neetrino-chat-widget {
+    position: fixed;
+    z-index: 9999;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    user-select: none;
+    transition: all 0.3s ease;
+    transform: translate(-50%, -50%);
+    /* Позиция устанавливается через inline CSS с медиазапросами */
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Состояние после инициализации */
+.neetrino-chat-widget.initialized {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+/* Позиции виджета управляются inline CSS с медиазапросами */
+
+/* Резервные позиции для совместимости */
+.neetrino-chat-bottom-right {
+    bottom: 20px;
+    right: 20px;
+}
+
+.neetrino-chat-bottom-left {
+    bottom: 20px;
+    left: 20px;
+}
+
+.neetrino-chat-top-right {
+    top: 20px;
+    right: 20px;
+}
+
+.neetrino-chat-top-left {
+    top: 20px;
+    left: 20px;
+}
+
+/* Главная кнопка */
+.neetrino-chat-main-button {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3);
+    transition: transform 0.3s ease;
+    margin: 0 auto;
+}
+
+.neetrino-chat-main-button:hover {
+    box-shadow: 0 6px 30px rgba(46, 204, 113, 0.4);
+}
+
+.neetrino-chat-main-button .dashicons {
+    font-size: 24px;
+    color: white;
+    line-height: 1;
+}
+
+/* Пульсация */
+.neetrino-chat-pulse {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: rgba(46, 204, 113, 0.4);
+    animation: pulse 2s infinite;
+}
+
+/* Пульсация с пользовательским цветом */
+.neetrino-chat-widget.color-applied .neetrino-chat-pulse {
+    background: var(--pulse-color, rgba(46, 204, 113, 0.4));
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
+}
+
+/* Кнопки мессенджеров */
+.neetrino-chat-buttons {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.neetrino-chat-widget.active .neetrino-chat-buttons {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.neetrino-chat-button {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.neetrino-chat-button:hover {
+    border: 2px solid #2ecc71;
+    box-shadow: 0 4px 20px rgba(46, 204, 113, 0.3);
+}
+
+.neetrino-chat-button .dashicons {
+    font-size: 20px;
+    color: #2ecc71;
+    line-height: 1;
+}
+
+
+
+/* Вертикальное расположение - умное позиционирование */
+.neetrino-chat-vertical .neetrino-chat-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Кнопки снизу - открываем вверх */
+.neetrino-chat-vertical.neetrino-chat-bottom-right .neetrino-chat-buttons,
+.neetrino-chat-vertical.neetrino-chat-bottom-left .neetrino-chat-buttons {
+    bottom: 70px;
+}
+
+/* Кнопки сверху - открываем вниз */
+.neetrino-chat-vertical.neetrino-chat-top-right .neetrino-chat-buttons,
+.neetrino-chat-vertical.neetrino-chat-top-left .neetrino-chat-buttons {
+    top: 70px;
+}
+
+/* Горизонтальное расположение - умное позиционирование */
+.neetrino-chat-horizontal .neetrino-chat-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.neetrino-chat-horizontal .neetrino-chat-button {
+    margin: 0 10px;
+}
+
+/* Кнопки справа - открываем влево */
+.neetrino-chat-horizontal.neetrino-chat-bottom-right .neetrino-chat-buttons,
+.neetrino-chat-horizontal.neetrino-chat-top-right .neetrino-chat-buttons {
+    right: 70px;
+}
+
+/* Кнопки слева - открываем вправо */
+.neetrino-chat-horizontal.neetrino-chat-bottom-left .neetrino-chat-buttons,
+.neetrino-chat-horizontal.neetrino-chat-top-left .neetrino-chat-buttons {
+    left: 70px;
+}
+
+/* Квадратный стиль */
+.neetrino-chat-square .neetrino-chat-main-button,
+.neetrino-chat-square .neetrino-chat-button {
+    border-radius: 12px;
+}
+
+.neetrino-chat-square .neetrino-chat-pulse {
+    border-radius: 12px;
+}
+
+/* Размеры */
+.neetrino-chat-small .neetrino-chat-main-button {
+    width: 50px;
+    height: 50px;
+}
+
+.neetrino-chat-small .neetrino-chat-button {
+    width: 40px;
+    height: 40px;
+}
+
+.neetrino-chat-small .neetrino-chat-main-button .dashicons {
+    font-size: 20px;
+}
+
+.neetrino-chat-small .neetrino-chat-button .dashicons {
+    font-size: 16px;
+}
+
+.neetrino-chat-large .neetrino-chat-main-button {
+    width: 70px;
+    height: 70px;
+}
+
+.neetrino-chat-large .neetrino-chat-button {
+    width: 60px;
+    height: 60px;
+}
+
+.neetrino-chat-large .neetrino-chat-main-button .dashicons {
+    font-size: 28px;
+}
+
+.neetrino-chat-large .neetrino-chat-button .dashicons {
+    font-size: 24px;
+}
+
+/* Статус */
+.neetrino-chat-status {
+    position: absolute;
+    bottom: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 10000;
+}
+
+/* Показываем статус при наведении на виджет */
+.neetrino-chat-widget:hover .neetrino-chat-status {
+    opacity: 1;
+    visibility: visible;
+}
+
+.neetrino-chat-status-dot {
+    width: 6px;
+    height: 6px;
+    background: #2ecc71;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+}
+
+/* Статус с пользовательским цветом */
+.neetrino-chat-widget.color-applied .neetrino-chat-status-dot {
+    background: var(--status-color, #2ecc71);
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0.3;
+    }
+}
+
+.neetrino-chat-status-text {
+    color: #2ecc71;
+    font-weight: 500;
+}
+
+/* Текст статуса с пользовательским цветом */
+.neetrino-chat-widget.color-applied .neetrino-chat-status-text {
+    color: var(--status-color, #2ecc71);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .neetrino-chat-widget {
+        /* Позиция устанавливается через inline CSS медиазапросы */
+        /* Учитываем безопасные зоны на мобильных устройствах */
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+    
+    .neetrino-chat-main-button {
+        width: 55px;
+        height: 55px;
+    }
+    
+    .neetrino-chat-button {
+        width: 45px;
+        height: 45px;
+    }
+    
+    /* Статус на мобильных скрываем по умолчанию */
+    .neetrino-chat-status {
+        display: none;
+    }
+    
+    /* Убираем статус при наведении на мобильных */
+    .neetrino-chat-widget:hover .neetrino-chat-status {
+        display: none;
+    }
+    
+    /* Горизонтальное расположение на мобильных - делаем вертикальным */
+    .neetrino-chat-horizontal .neetrino-chat-buttons {
+        flex-direction: column;
+    }
+    
+    .neetrino-chat-horizontal .neetrino-chat-button {
+        margin: 8px 0;
+    }
+    
+    /* Ограничиваем позицию чтобы виджет не выходил за пределы экрана */
+    .neetrino-chat-widget {
+        max-width: calc(100vw - 20px);
+        max-height: calc(100vh - 20px);
+    }
+}
+
+/* Скрытие для мобильных или десктопов */
+@media (max-width: 768px) {
+    .neetrino-chat-widget.hide-mobile {
+        display: none;
+    }
+}
+
+@media (min-width: 769px) {
+    .neetrino-chat-widget.hide-desktop {
+        display: none;
+    }
+}
+
+/* Состояние закрытия */
+.neetrino-chat-widget.closed .neetrino-chat-buttons {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Специальные иконки для мессенджеров */
+.neetrino-chat-button[data-type="whatsapp"] {
+    background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+}
+
+.neetrino-chat-button[data-type="whatsapp"] .dashicons {
+    color: white;
+}
+
+.neetrino-chat-button[data-type="telegram"] {
+    background: linear-gradient(135deg, #0088cc 0%, #0066aa 100%);
+}
+
+.neetrino-chat-button[data-type="telegram"] .dashicons {
+    color: white;
+}
+
+.neetrino-chat-button[data-type="phone"] {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+}
+
+.neetrino-chat-button[data-type="phone"] .dashicons {
+    color: white;
+}
+
+.neetrino-chat-button[data-type="email"] {
+    background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+}
+
+.neetrino-chat-button[data-type="email"] .dashicons {
+    color: white;
+}
+
+.neetrino-chat-button[data-type="viber"] {
+    background: linear-gradient(135deg, #7C529E 0%, #5A3A7C 100%);
+}
+
+.neetrino-chat-button[data-type="viber"] .dashicons {
+    color: white;
+}
+
+/* Custom messenger icons */
+.dashicons-whatsapp:before {
+    content: "";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.520-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.570-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893A11.821 11.821 0 0020.051 3.488z"/></svg>');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+}
+
+.dashicons-telegram:before {
+    content: "";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="m9.417 15.181-.397 5.584c.568 0 .814-.244 1.109-.537l2.663-2.545 5.518 4.041c1.012.564 1.725.267 1.998-.931L23.93 3.821l.001-.001c.321-1.496-.541-2.081-1.527-1.714l-21.29 8.151c-1.453.564-1.431 1.374-.247 1.741l5.443 1.693L18.953 5.78c.595-.394 1.136-.176.691.218z"/></svg>');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+}
+
+.dashicons-viber:before {
+    content: "";
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M11.398.002C9.473.028 5.331.344 3.014 2.467 1.294 4.177.693 6.698.623 9.82c-.06 3.11-.13 8.95 5.5 10.541v2.42s-.038.97.602.582c.64-.388 2.002-1.501 2.002-1.501 7.155.665 12.668-1.602 13.267-8.064.635-6.676-.99-10.462-5.297-11.798-.896-.278-2.494-.398-5.299-.398zm.012 1.703c2.63-.005 4.064.116 4.866.365 3.739 1.152 5.079 4.506 4.49 10.249-.517 5.417-5.24 7.307-11.399 6.735 0 0-2.786 2.227-3.302 2.731-.123.121-.024-.13-.024-.13l.125-3.468c-4.75-1.334-4.688-6.633-4.633-9.323.06-2.78.602-4.95 2.083-6.389 1.943-1.886 5.464-2.149 7.794-2.17z"/><path d="M11.85 5.531c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283zm1.244.188c-.13-.01-.26.04-.35.132-.242.246-.242.687 0 .933.169.172.437.172.606 0 .242-.246.242-.687 0-.933-.083-.083-.192-.126-.256-.132zm1.188.313c-.062-.01-.126.015-.175.065-.131.134-.131.379 0 .513.094.096.243.096.337 0 .131-.134.131-.379 0-.513-.047-.047-.103-.063-.162-.065zm-5.719.937c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283zm7.906 1.313c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283zm-6.75 1.875c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283zm5.594 0c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283zm-2.812 1.219c-.594-.066-.948.04-.937.727.005.319.016.637.017.956.001.303.303.456.537.332.275-.146.458-.416.458-.732 0-.594-.04-1.188-.075-1.283z"/></svg>');
+    background-size: 20px 20px;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    font-size: 0;
+}
