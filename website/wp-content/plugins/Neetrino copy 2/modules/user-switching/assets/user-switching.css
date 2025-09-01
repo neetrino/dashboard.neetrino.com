@@ -1,0 +1,285 @@
+/* User Switching Module Styles */
+
+/* Ссылки в админке */
+.neetrino-switch-to-link,
+.neetrino-switch-to-button {
+    color: #f1c40f !important;
+    font-weight: 500;
+}
+
+.neetrino-switch-to-link:hover,
+.neetrino-switch-to-button:hover {
+    color: #f39c12 !important;
+}
+
+/* Админ-бар */
+#wp-admin-bar-neetrino-switch-back .ab-item {
+    background: #f1c40f !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+#wp-admin-bar-neetrino-switch-back:hover .ab-item {
+    background: #f39c12 !important;
+}
+
+.neetrino-switch-back-text {
+    padding: 0 10px;
+}
+
+/* Фиксированная кнопка в левом нижнем углу */
+.neetrino-switch-back-fixed {
+    position: fixed;
+    bottom: 30px;
+    left: 30px;
+    z-index: 9999;
+    animation: slideInLeft 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes slideInLeft {
+    from {
+        transform: translateX(-100%) scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0) scale(1);
+        opacity: 1;
+    }
+}
+
+.neetrino-switch-container {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Стрелка слева от кнопки */
+.neetrino-switch-arrow-left {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 
+        0 4px 15px rgba(241, 196, 15, 0.3),
+        0 0 0 0 rgba(241, 196, 15, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.neetrino-switch-arrow-left::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.1) 100%);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.neetrino-switch-container:hover .neetrino-switch-arrow-left::before {
+    opacity: 1;
+}
+
+.neetrino-switch-container:hover .neetrino-switch-arrow-left {
+    transform: translateX(-8px) scale(1.1);
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    box-shadow: 
+        0 6px 20px rgba(241, 196, 15, 0.4),
+        0 0 0 8px rgba(241, 196, 15, 0.1);
+}
+
+.neetrino-switch-arrow-left svg {
+    transition: all 0.3s ease;
+}
+
+.neetrino-switch-container:hover .neetrino-switch-arrow-left svg {
+    transform: translateX(-2px) scale(1.1);
+    color: #fff;
+}
+
+/* Основная прямоугольная кнопка */
+.neetrino-switch-back-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    color: #fff;
+    text-decoration: none;
+    padding: 15px 25px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    cursor: pointer;
+    box-shadow: 
+        0 6px 20px rgba(52, 73, 94, 0.3),
+        0 0 0 0 rgba(241, 196, 15, 0.2);
+    position: relative;
+    overflow: hidden;
+    min-width: 160px;
+}
+
+.neetrino-switch-back-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: left 0.5s ease;
+}
+
+.neetrino-switch-back-btn:hover::before {
+    left: 100%;
+}
+
+.neetrino-switch-back-btn:hover {
+    background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 10px 30px rgba(52, 73, 94, 0.4),
+        0 0 0 3px rgba(241, 196, 15, 0.3);
+    color: #fff;
+    text-decoration: none;
+}
+
+.neetrino-switch-back-btn:active {
+    transform: translateY(0) scale(0.98);
+    transition: all 0.1s ease;
+}
+
+/* Иконка пользователя в кнопке */
+.neetrino-switch-icon {
+    font-size: 20px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    transition: all 0.3s ease;
+}
+
+.neetrino-switch-back-btn:hover .neetrino-switch-icon {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Текст в кнопке */
+.neetrino-switch-text {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+.neetrino-switch-back-btn:hover .neetrino-switch-text {
+    transform: translateX(2px);
+}
+
+/* Пульсирующий эффект */
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 
+            0 6px 20px rgba(52, 73, 94, 0.3),
+            0 0 0 0 rgba(241, 196, 15, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 6px 20px rgba(52, 73, 94, 0.4),
+            0 0 0 4px rgba(241, 196, 15, 0.15);
+    }
+}
+
+@keyframes arrowPulse {
+    0%, 100% {
+        box-shadow: 
+            0 4px 15px rgba(241, 196, 15, 0.3),
+            0 0 0 0 rgba(241, 196, 15, 0.2);
+    }
+    50% {
+        box-shadow: 
+            0 4px 15px rgba(241, 196, 15, 0.5),
+            0 0 0 6px rgba(241, 196, 15, 0.1);
+    }
+}
+
+.neetrino-switch-back-btn {
+    animation: pulse 4s infinite ease-in-out;
+}
+
+.neetrino-switch-arrow-left {
+    animation: arrowPulse 4s infinite ease-in-out 0.2s;
+}
+
+.neetrino-switch-container:hover .neetrino-switch-back-btn,
+.neetrino-switch-container:hover .neetrino-switch-arrow-left {
+    animation: none;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+    .neetrino-switch-back-fixed {
+        bottom: 20px;
+        left: 20px;
+    }
+    
+    .neetrino-switch-container {
+        gap: 8px;
+    }
+    
+    .neetrino-switch-arrow-left {
+        width: 40px;
+        height: 40px;
+    }
+    
+    .neetrino-switch-arrow-left svg {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .neetrino-switch-back-btn {
+        padding: 12px 20px;
+        font-size: 14px;
+        min-width: 140px;
+        gap: 10px;
+    }
+    
+    .neetrino-switch-icon {
+        font-size: 18px;
+    }
+}
+
+/* Специальный эффект при первом появлении */
+.neetrino-switch-back-fixed.first-appear {
+    animation: 
+        slideInLeft 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55),
+        attention 1.5s ease-in-out 0.7s;
+}
+
+@keyframes attention {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.05); }
+    50% { transform: scale(1.02); }
+    75% { transform: scale(1.08); }
+}
+
+/* Темная тема поддержка */
+@media (prefers-color-scheme: dark) {
+    .neetrino-switch-back-btn {
+        background: linear-gradient(135deg, #1a252f 0%, #2c3e50 100%);
+        box-shadow: 
+            0 6px 20px rgba(26, 37, 47, 0.4),
+            0 0 0 0 rgba(241, 196, 15, 0.2);
+    }
+    
+    .neetrino-switch-back-btn:hover {
+        background: linear-gradient(135deg, #2c3e50 0%, #1a252f 100%);
+        box-shadow: 
+            0 10px 30px rgba(26, 37, 47, 0.5),
+            0 0 0 3px rgba(241, 196, 15, 0.3);
+    }
+}
