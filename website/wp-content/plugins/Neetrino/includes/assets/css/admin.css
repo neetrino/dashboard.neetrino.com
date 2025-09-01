@@ -130,9 +130,9 @@
     background: #10b981;
     color: white;
     position: relative;
-    padding: 8px 12px;
+    padding: 5px 12px;
     overflow: visible;
-    min-width: 200px;
+    min-width: 100px;
     height: auto;
     display: flex;
     align-items: center;
