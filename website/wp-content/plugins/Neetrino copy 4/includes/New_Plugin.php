@@ -116,38 +116,16 @@ class Neetrino_Plugin_Updater {
             $upgrader = new Plugin_Upgrader(new WP_Ajax_Upgrader_Skin());
             error_log('Neetrino Plugin Updater: Plugin_Upgrader создан');
             
-            // Проверяем, что upgrader создался правильно
-            if (!$upgrader) {
-                error_log('Neetrino Plugin Updater: Не удалось создать Plugin_Updater');
-                return [
-                    'success' => false,
-                    'message' => 'Не удалось создать Plugin_Updater',
-                    'old_version' => $current_version
-                ];
-            }
-            
             // Выполняем обновление
             error_log('Neetrino Plugin Updater: Вызываем upgrade() с URL: ' . $this->remote_plugin_url);
             $result = $upgrader->upgrade($this->remote_plugin_url);
             error_log('Neetrino Plugin Updater: Результат upgrade(): ' . json_encode($result));
-            error_log('Neetrino Plugin Updater: Тип результата: ' . gettype($result));
-            error_log('Neetrino Plugin Updater: Результат === false: ' . ($result === false ? 'true' : 'false'));
             
             if (is_wp_error($result)) {
                 error_log('Neetrino Plugin Updater: Ошибка обновления: ' . $result->get_error_message());
                 return [
                     'success' => false,
                     'message' => 'Ошибка обновления: ' . $result->get_error_message(),
-                    'old_version' => $current_version
-                ];
-            }
-            
-            // Проверяем, что обновление действительно произошло
-            if ($result === false) {
-                error_log('Neetrino Plugin Updater: WordPress Upgrader вернул false - обновление не удалось');
-                return [
-                    'success' => false,
-                    'message' => 'WordPress Upgrader не смог выполнить обновление',
                     'old_version' => $current_version
                 ];
             }
