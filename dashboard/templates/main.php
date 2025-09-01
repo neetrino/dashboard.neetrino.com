@@ -167,9 +167,17 @@
                     <span class="text-sm text-gray-600">Выбрано: <span id="selected-count" class="font-semibold">0</span></span>
                 </div>
                 <div id="bulk-actions" class="hidden">
-                    <button data-action="bulk-update" class="modern-btn modern-btn-primary text-xs">
-                        Обновить выбранные
-                    </button>
+                    <div class="flex items-center space-x-2">
+                        <button data-action="bulk-update" class="modern-btn modern-btn-primary text-xs">
+                            Обновить выбранные
+                        </button>
+                        <button data-action="bulk-update-plugin" class="modern-btn modern-btn-warning text-xs">
+                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Обновить плагин
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Neetrino
  * Description: Modular WordPress plugin for enhanced website management and integration
- * Version: 3.7.1
+ * Version: 3.8.0
  * Author: Neetrino
  * Text Domain: neetrino
  */
@@ -210,7 +210,7 @@ class Neetrino {
         }
         
         // Load required core files
-        require_once plugin_dir_path(__FILE__) . 'includes/New_Plugin.php';
+        // require_once plugin_dir_path(__FILE__) . 'includes/New_Plugin.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Module_Config.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Assets.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Dashboard.php';

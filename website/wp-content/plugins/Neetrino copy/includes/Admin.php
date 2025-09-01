@@ -11,11 +11,9 @@ if (!defined('ABSPATH')) {
 }
 
 class Neetrino_Admin {
-    private $updater;
     private $assets;
 
     public function __construct() {
-        $this->updater = new Neetrino_Plugin_Updater();
         $this->assets = new Neetrino_Assets();
         
         $this->init_hooks();
@@ -324,5 +322,72 @@ class Neetrino_Admin {
             wp_redirect(admin_url('admin.php?page=neetrino_dashboard&reconnect=error&error=' . urlencode($result['error'])));
         }
         exit;
+    }
+    
+    /**
+     * Публичный метод для обновления плагина (вызывается из REST_API.php)
+     * Возвращает результат обновления в формате массива
+     */
+    public function perform_plugin_update() {
+        error_log("NEETRINO Admin: perform_plugin_update() вызван из REST API");
+        
+        // Получаем URL архива плагина
+        $remote_plugin_url = 'http://costom-scripts.neetrino.net/Plugin/Neetrino.zip';
+        
+        // Инициализируем обновление плагина
+        require_once(ABSPATH . 'wp-admin/includes/class-wp-upgrader.php');
+        require_once(ABSPATH . 'wp-admin/includes/file.php');
+        require_once(ABSPATH . 'wp-admin/includes/plugin.php');
+        
+        // Временно деактивируем плагин
+        $plugin_file = plugin_basename(NEETRINO_PLUGIN_FILE);
+        deactivate_plugins($plugin_file, true);
+        
+        // Создаем апгрейдер с тихим выводом
+        $skin = new WP_Ajax_Upgrader_Skin();
+        $upgrader = new Plugin_Upgrader($skin);
+        
+        // Отключаем проверки на совместимость и т.д.
+        add_filter('upgrader_package_options', function($options) {
+            $options['abort_if_destination_exists'] = false;
+            $options['hook_extra']['plugin'] = plugin_basename(NEETRINO_PLUGIN_FILE);
+            return $options;
+        });
+        
+        // Очищаем кэш обновлений
+        wp_clean_plugins_cache(false);
+        
+        // Выполняем установку напрямую из URL
+        $upgraded = $upgrader->install($remote_plugin_url, ['overwrite_package' => true]);
+        
+        // Активируем плагин снова
+        activate_plugin($plugin_file);
+        
+        // ВАЖНО: После обновления проверяем регистрацию на дашборде
+        Neetrino_Dashboard_Connect::maybe_register();
+        
+        if (!is_wp_error($upgraded)) {
+            // Удаляем флаг обновления
+            delete_transient('neetrino_update_available');
+            delete_option('neetrino_current_version');
+            
+            error_log("NEETRINO Admin: Обновление плагина успешно завершено");
+            
+            return [
+                'success' => true,
+                'message' => 'Plugin updated successfully!',
+                'old_version' => '3.7.0', // TODO: получать реальную версию
+                'new_version' => '3.7.1'  // TODO: получать реальную версию
+            ];
+        } else {
+            error_log("NEETRINO Admin: Ошибка обновления плагина - " . $upgraded->get_error_message());
+            
+            return [
+                'success' => false,
+                'message' => 'An error occurred during the update process: ' . $upgraded->get_error_message(),
+                'old_version' => '3.7.0',
+                'new_version' => '3.7.0'
+            ];
+        }
     }
 }
