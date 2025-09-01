@@ -63,12 +63,7 @@ class Neetrino_Dashboard {
                 <div>
                     <h1>
                         <img src="<?php echo esc_url(plugin_dir_url(NEETRINO_PLUGIN_FILE) . 'includes/Neetrino-Logo.png'); ?>" alt="Neetrino Logo" class="neetrino-header-logo">
-                        <span class="neetrino-header-title">NEETRINO IT COMPANY</span>
                     </h1>
-                    <div class="neetrino-version-display">
-                        <span class="version-label">Версия плагина:</span>
-                        <span class="version-number">v<?php echo esc_html($version); ?></span>
-                    </div>
                 </div>
             </div>
             <div class="neetrino-header-right">
@@ -84,13 +79,16 @@ class Neetrino_Dashboard {
     private static function render_update_buttons($version) {
         ?>
         <div class="neetrino-header-actions">
-            <!-- Кнопка обновления - всегда видна -->
+            <!-- Кнопка обновления с версией - всегда видна -->
             <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="action-form">
                 <?php wp_nonce_field('neetrino_direct_update'); ?>
                 <input type="hidden" name="action" value="neetrino_direct_update">
-                <button type="submit" class="neetrino-btn neetrino-btn-update">
-                    <span class="dashicons dashicons-download"></span>
-                    <span><?php echo esc_html__('Update Now', 'neetrino'); ?></span>
+                <button type="submit" class="neetrino-btn neetrino-btn-update neetrino-btn-with-version">
+                    <span class="neetrino-btn-content">
+                        <span class="dashicons dashicons-download"></span>
+                        <span><?php echo esc_html__('Update Now', 'neetrino'); ?></span>
+                    </span>
+                    <span class="neetrino-version-badge-inline">v<?php echo esc_html($version); ?></span>
                 </button>
             </form>
             
