@@ -161,6 +161,12 @@ class Neetrino_REST_API {
      * Выполнение команды
      */
     public static function execute_command($request) {
+        // Подробное логирование для отладки
+        error_log('Neetrino REST API: execute_command() вызван');
+        error_log('Neetrino REST API: REQUEST_METHOD = ' . $_SERVER['REQUEST_METHOD']);
+        error_log('Neetrino REST API: REQUEST_URI = ' . $_SERVER['REQUEST_URI']);
+        error_log('Neetrino REST API: HTTP_USER_AGENT = ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'не установлен'));
+        
         // Базовая защита
         
         // Проверка IP (временно отключена)
@@ -170,10 +176,15 @@ class Neetrino_REST_API {
         
         // Проверка API ключа
         $api_key = $request->get_param('api_key');
+        error_log('Neetrino REST API: API ключ получен: ' . ($api_key ? 'да' : 'нет'));
+        
         if (!self::verify_api_key($api_key)) {
+            error_log('Neetrino REST API: API ключ не прошел проверку');
             self::log_security_event('invalid_api_key', ['ip' => self::get_client_ip()]);
             return new WP_Error('unauthorized', 'Invalid API key', ['status' => 401]);
         }
+        
+        error_log('Neetrino REST API: API ключ прошел проверку');
         
         $command = $request->get_param('command');
         $data = $request->get_param('data');
@@ -231,22 +242,30 @@ class Neetrino_REST_API {
      * Обработка конкретных команд
      */
     private static function handle_command($command, $data = []) {
+        error_log('Neetrino REST API: handle_command() вызван с командой: ' . $command);
+        error_log('Neetrino REST API: Данные команды: ' . json_encode($data));
+        
         switch ($command) {
             case 'delete_plugin':
+                error_log('Neetrino REST API: Выполняем команду delete_plugin');
                 return self::delete_plugin();
                 
             case 'deactivate_plugin':
+                error_log('Neetrino REST API: Выполняем команду deactivate_plugin');
                 return self::deactivate_plugin();
                 
             case 'toggle_module':
+                error_log('Neetrino REST API: Выполняем команду toggle_module');
                 $module = isset($data['module']) ? $data['module'] : '';
                 $enable = isset($data['enable']) ? (bool)$data['enable'] : false;
                 return self::toggle_module($module, $enable);
                 
             case 'get_status':
+                error_log('Neetrino REST API: Выполняем команду get_status');
                 return self::get_site_status();
                 
             case 'maintenance_mode':
+                error_log('Neetrino REST API: Выполняем команду maintenance_mode');
                 // Support both legacy boolean and new 3-state mode
                 if (isset($data['mode'])) {
                     $mode = sanitize_text_field($data['mode']);
@@ -257,9 +276,11 @@ class Neetrino_REST_API {
                 }
                 
             case 'get_info':
+                error_log('Neetrino REST API: Выполняем команду get_info');
                 return self::get_site_info();
                 
             case 'test_connection':
+                error_log('Neetrino REST API: Выполняем команду test_connection');
                 return [
                     'success' => true,
                     'message' => 'Connection test successful',
@@ -270,6 +291,7 @@ class Neetrino_REST_API {
                 ];
                 
             case 'test_security':
+                error_log('Neetrino REST API: Выполняем команду test_security');
                 return [
                     'success' => true,
                     'message' => 'Security test successful - API key verified',
@@ -283,9 +305,15 @@ class Neetrino_REST_API {
                 ];
                 
             case 'update_plugin':
+                error_log('Neetrino REST API: Выполняем команду update_plugin');
                 return self::update_plugin();
                 
+            case 'update_plugins':
+                error_log('Neetrino REST API: Выполняем команду update_plugins');
+                return self::update_plugin(); // Используем тот же метод
+                
             default:
+                error_log('Neetrino REST API: Неизвестная команда: ' . $command);
                 throw new Exception('Unknown command: ' . $command);
         }
     }
@@ -694,18 +722,26 @@ class Neetrino_REST_API {
      * Проверка API ключа
      */
     private static function verify_api_key($api_key) {
+        error_log('Neetrino REST API: verify_api_key() вызван');
+        error_log('Neetrino REST API: Переданный API ключ: ' . ($api_key ? 'установлен' : 'пустой'));
+        
         if (empty($api_key)) {
+            error_log('Neetrino REST API: API ключ пустой');
             return false;
         }
         
         $stored_key = get_option('neetrino_dashboard_api_key');
+        error_log('Neetrino REST API: Сохраненный API ключ: ' . ($stored_key ? 'установлен' : 'пустой'));
         
         if (empty($stored_key)) {
             error_log("NEETRINO Security: No API key configured");
             return false;
         }
         
-        return $api_key === $stored_key;
+        $result = $api_key === $stored_key;
+        error_log('Neetrino REST API: Результат проверки API ключа: ' . ($result ? 'true' : 'false'));
+        
+        return $result;
     }
     
     /**
@@ -812,22 +848,29 @@ class Neetrino_REST_API {
      */
     private static function update_plugin() {
         try {
-            // Проверяем, есть ли доступ к обновлению
-            if (!current_user_can('update_plugins')) {
-                return [
-                    'success' => false,
-                    'message' => 'Недостаточно прав для обновления плагинов'
-                ];
-            }
+            // Подробное логирование для отладки
+            error_log('Neetrino REST API: update_plugin() вызван');
+            error_log('Neetrino REST API: current_user_can("update_plugins") = ' . (current_user_can('update_plugins') ? 'true' : 'false'));
+            error_log('Neetrino REST API: get_current_user_id() = ' . get_current_user_id());
+            error_log('Neetrino REST API: wp_get_current_user() = ' . json_encode(wp_get_current_user()));
+            
+            // Для команд через дашборд пропускаем проверку прав пользователя
+            // так как это системные команды, выполняемые с API ключом
+            error_log('Neetrino REST API: Пропускаем проверку прав пользователя для системной команды');
             
             // Получаем экземпляр класса обновления
+            error_log('Neetrino REST API: Проверяем существование класса Neetrino_Plugin_Updater');
             if (class_exists('Neetrino_Plugin_Updater')) {
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Updater найден, создаем экземпляр');
                 $updater = new Neetrino_Plugin_Updater();
                 
                 // Выполняем обновление
+                error_log('Neetrino REST API: Вызываем perform_direct_update()');
                 $result = $updater->perform_direct_update();
+                error_log('Neetrino REST API: Результат perform_direct_update(): ' . json_encode($result));
                 
                 if ($result['success']) {
+                    error_log('Neetrino REST API: Обновление успешно, возвращаем результат');
                     return [
                         'success' => true,
                         'message' => 'Плагин Neetrino успешно обновлен',
@@ -838,12 +881,14 @@ class Neetrino_REST_API {
                         ]
                     ];
                 } else {
+                    error_log('Neetrino REST API: Обновление не удалось: ' . $result['message']);
                     return [
                         'success' => false,
                         'message' => 'Ошибка обновления: ' . $result['message']
                     ];
                 }
             } else {
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Updater не найден');
                 return [
                     'success' => false,
                     'message' => 'Класс обновления плагина не найден'
