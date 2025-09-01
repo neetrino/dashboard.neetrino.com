@@ -130,13 +130,13 @@
     background: #10b981;
     color: white;
     position: relative;
-    padding-right: 70px;
-    overflow: hidden;
-    min-width: 220px;
-    padding-left: 20px;
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding: 14px 20px;
+    overflow: visible;
+    min-width: 280px;
     height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .neetrino-btn-with-version:hover {
@@ -157,26 +157,19 @@
     align-items: center;
     gap: 10px;
     white-space: nowrap;
-    max-width: calc(100% - 70px);
+    flex: 1;
 }
 
 .neetrino-version-badge-inline {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
     background: rgba(255, 255, 255, 0.2);
     color: white;
-    padding: 0 15px;
+    padding: 6px 12px;
     font-size: 12px;
     font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 0 7px 7px 0;
-    min-width: 60px;
-    width: 70px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
+    margin-left: 15px;
 }
 
 /* Documentation Button - Purple Theme */
@@ -390,19 +383,18 @@
     }
     
     .neetrino-btn-with-version {
-        padding-right: 60px;
-        min-width: 180px;
+        padding: 12px 16px;
+        min-width: 220px;
         height: 44px;
-        padding-left: 16px;
-        padding-top: 12px;
-        padding-bottom: 12px;
+        flex-direction: column;
+        gap: 8px;
     }
     
     .neetrino-version-badge-inline {
-        padding: 0 10px;
+        padding: 4px 8px;
         font-size: 11px;
-        min-width: 50px;
-        width: 60px;
+        margin-left: 0;
+        margin-top: 4px;
     }
     
     .neetrino-dashboard-btn {
