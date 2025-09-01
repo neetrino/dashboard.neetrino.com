@@ -66,28 +66,46 @@ class Neetrino_Plugin_Updater {
         $plugin_data = get_plugin_data(NEETRINO_PLUGIN_FILE);
         $current_version = $plugin_data['Version'];
         
-        // Вычисляем новую версию
-        $version_parts = explode('.', $current_version);
-        $last_part = (int)array_pop($version_parts);
-        $version_parts[] = $last_part + 1;
-        $new_version = implode('.', $version_parts);
-        
-        // Сохраняем информацию об обновлении
-        update_option('neetrino_update_info', [
-            'current_version' => $current_version,
-            'new_version' => $new_version,
-            'package' => $this->remote_plugin_url
-        ]);
-        
-        // Устанавливаем флаг обновления
-        set_transient('neetrino_update_available', true, 12 * HOUR_IN_SECONDS);
-        
-        return [
-            'success' => true,
-            'message' => 'Обновление инициировано',
-            'current_version' => $current_version,
-            'new_version' => $new_version
-        ];
+        try {
+            // Создаем экземпляр WordPress Upgrader
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
+            
+            // Создаем upgrader
+            $upgrader = new Plugin_Upgrader(new WP_Ajax_Upgrader_Skin());
+            
+            // Выполняем обновление
+            $result = $upgrader->upgrade($this->remote_plugin_url);
+            
+            if (is_wp_error($result)) {
+                return [
+                    'success' => false,
+                    'message' => 'Ошибка обновления: ' . $result->get_error_message(),
+                    'old_version' => $current_version
+                ];
+            }
+            
+            // Получаем новую версию после обновления
+            $plugin_data_after = get_plugin_data(NEETRINO_PLUGIN_FILE);
+            $new_version = $plugin_data_after['Version'];
+            
+            // Очищаем кэш плагинов
+            wp_clean_plugins_cache();
+            
+            return [
+                'success' => true,
+                'message' => 'Плагин Neetrino успешно обновлен',
+                'old_version' => $current_version,
+                'new_version' => $new_version
+            ];
+            
+        } catch (Exception $e) {
+            return [
+                'success' => false,
+                'message' => 'Ошибка обновления: ' . $e->getMessage(),
+                'old_version' => $current_version
+            ];
+        }
     }
 
     /**

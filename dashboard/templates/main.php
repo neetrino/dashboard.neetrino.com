@@ -562,7 +562,7 @@
                 <div class="control-section mb-6">
                     <h5 class="control-section-title">⚡ Управление плагином</h5>
                     <div class="main-plugin-controls">
-                        <button data-action="execute-command" data-command="update_plugins" class="main-control-btn update-btn">
+                        <button data-action="execute-command" data-command="update_plugin" class="main-control-btn update-btn">
                             <div class="control-btn-icon bg-blue-100 text-blue-600">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>

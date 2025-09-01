@@ -282,6 +282,9 @@ class Neetrino_REST_API {
                     ]
                 ];
                 
+            case 'update_plugin':
+                return self::update_plugin();
+                
             default:
                 throw new Exception('Unknown command: ' . $command);
         }
@@ -802,6 +805,59 @@ class Neetrino_REST_API {
             'message' => 'Security configuration retrieved',
             'config' => $config
         ];
+    }
+    
+    /**
+     * Обновление плагина Neetrino
+     */
+    private static function update_plugin() {
+        try {
+            // Проверяем, есть ли доступ к обновлению
+            if (!current_user_can('update_plugins')) {
+                return [
+                    'success' => false,
+                    'message' => 'Недостаточно прав для обновления плагинов'
+                ];
+            }
+            
+            // Получаем экземпляр класса обновления
+            if (class_exists('Neetrino_Plugin_Updater')) {
+                $updater = new Neetrino_Plugin_Updater();
+                
+                // Выполняем обновление
+                $result = $updater->perform_direct_update();
+                
+                if ($result['success']) {
+                    return [
+                        'success' => true,
+                        'message' => 'Плагин Neetrino успешно обновлен',
+                        'data' => [
+                            'old_version' => $result['old_version'] ?? 'неизвестно',
+                            'new_version' => $result['new_version'] ?? 'неизвестно',
+                            'update_time' => time()
+                        ]
+                    ];
+                } else {
+                    return [
+                        'success' => false,
+                        'message' => 'Ошибка обновления: ' . $result['message']
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false,
+                    'message' => 'Класс обновления плагина не найден'
+                ];
+            }
+            
+        } catch (Exception $e) {
+            error_log('Neetrino REST API: Plugin update failed: ' . $e->getMessage());
+            
+            return [
+                'success' => false,
+                'message' => 'Ошибка обновления плагина: ' . $e->getMessage()
+            ];
+        }
     }
 }
 
