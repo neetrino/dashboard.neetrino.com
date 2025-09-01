@@ -81,48 +81,21 @@ class Neetrino_Plugin_Updater {
         }
 
         // Получаем текущую версию плагина
-        if (!defined('NEETRINO_PLUGIN_FILE')) {
-            error_log('Neetrino Plugin Updater: Константа NEETRINO_PLUGIN_FILE не определена');
-            return [
-                'success' => false,
-                'message' => 'Константа NEETRINO_PLUGIN_FILE не определена'
-            ];
-        }
-        
-        error_log('Neetrino Plugin Updater: NEETRINO_PLUGIN_FILE = ' . NEETRINO_PLUGIN_FILE);
-        
         $plugin_data = get_plugin_data(NEETRINO_PLUGIN_FILE);
-        if (!$plugin_data) {
-            error_log('Neetrino Plugin Updater: Не удалось получить данные плагина');
-            return [
-                'success' => false,
-                'message' => 'Не удалось получить данные плагина'
-            ];
-        }
-        
         $current_version = $plugin_data['Version'];
         
         try {
-            error_log('Neetrino Plugin Updater: Текущая версия плагина: ' . $current_version);
-            error_log('Neetrino Plugin Updater: URL для обновления: ' . $this->remote_plugin_url);
-            
             // Создаем экземпляр WordPress Upgrader
             require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
             require_once ABSPATH . 'wp-admin/includes/class-plugin-upgrader.php';
             
-            error_log('Neetrino Plugin Updater: Классы WordPress Upgrader загружены');
-            
             // Создаем upgrader
             $upgrader = new Plugin_Upgrader(new WP_Ajax_Upgrader_Skin());
-            error_log('Neetrino Plugin Updater: Plugin_Upgrader создан');
             
             // Выполняем обновление
-            error_log('Neetrino Plugin Updater: Вызываем upgrade() с URL: ' . $this->remote_plugin_url);
             $result = $upgrader->upgrade($this->remote_plugin_url);
-            error_log('Neetrino Plugin Updater: Результат upgrade(): ' . json_encode($result));
             
             if (is_wp_error($result)) {
-                error_log('Neetrino Plugin Updater: Ошибка обновления: ' . $result->get_error_message());
                 return [
                     'success' => false,
                     'message' => 'Ошибка обновления: ' . $result->get_error_message(),
@@ -130,16 +103,12 @@ class Neetrino_Plugin_Updater {
                 ];
             }
             
-            error_log('Neetrino Plugin Updater: Обновление выполнено, результат: ' . $result);
-            
             // Получаем новую версию после обновления
             $plugin_data_after = get_plugin_data(NEETRINO_PLUGIN_FILE);
             $new_version = $plugin_data_after['Version'];
-            error_log('Neetrino Plugin Updater: Версия после обновления: ' . $new_version);
             
             // Очищаем кэш плагинов
             wp_clean_plugins_cache();
-            error_log('Neetrino Plugin Updater: Кэш плагинов очищен');
             
             return [
                 'success' => true,
@@ -149,8 +118,6 @@ class Neetrino_Plugin_Updater {
             ];
             
         } catch (Exception $e) {
-            error_log('Neetrino Plugin Updater: Исключение при обновлении: ' . $e->getMessage());
-            error_log('Neetrino Plugin Updater: Стек вызовов: ' . $e->getTraceAsString());
             return [
                 'success' => false,
                 'message' => 'Ошибка обновления: ' . $e->getMessage(),
