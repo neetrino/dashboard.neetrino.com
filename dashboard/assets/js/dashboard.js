@@ -1314,9 +1314,6 @@ class NeetrinoDashboard {
         let completed = 0;
         let failed = 0;
         
-        // Показываем прогресс-бар
-        this.showPluginUpdateProgress(total);
-        
         this.showNotification(`Начинаем обновление плагина Neetrino на ${total} сайтах...`, 'info');
         
         // Обновляем плагины последовательно с задержкой
@@ -1324,9 +1321,6 @@ class NeetrinoDashboard {
             const siteId = selectedArray[i];
             
             try {
-                // Обновляем прогресс
-                this.updatePluginUpdateProgress(i + 1, total, siteId);
-                
                 // Выполняем команду обновления плагина
                 const result = await this.executeCommand(siteId, 'update_plugin');
                 
@@ -1348,9 +1342,6 @@ class NeetrinoDashboard {
                 await this.delay(2500);
             }
         }
-        
-        // Скрываем прогресс-бар
-        this.hidePluginUpdateProgress();
         
         // Показываем результат
         const message = `Обновление завершено: ${completed} успешно, ${failed} с ошибками`;
@@ -1771,53 +1762,7 @@ class NeetrinoDashboard {
         // Загрузка скрывается при рендере контента
     }
     
-    /**
-     * Прогресс-бар для обновления плагинов
-     */
-    showPluginUpdateProgress(total) {
-        const progressHtml = `
-            <div id="plugin-update-progress" class="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-white rounded-xl shadow-xl border border-gray-200 p-6 min-w-96">
-                <div class="flex items-center justify-between mb-4">
-                    <h3 class="text-lg font-semibold text-gray-900">Обновление плагина Neetrino</h3>
-                    <button onclick="neetrinoDashboard.hidePluginUpdateProgress()" class="text-gray-400 hover:text-gray-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="mb-4">
-                    <div class="flex justify-between text-sm text-gray-600 mb-2">
-                        <span>Прогресс: <span id="progress-current">0</span> из <span id="progress-total">${total}</span></span>
-                        <span id="progress-percentage">0%</span>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2">
-                        <div id="progress-bar" class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-                    </div>
-                </div>
-                <div class="text-sm text-gray-600">
-                    <div id="progress-site">Готов к обновлению...</div>
-                    <div id="progress-status" class="text-blue-600">Ожидание...</div>
-                </div>
-            </div>
-        `;
-        
-        $('body').append(progressHtml);
-    }
-    
-    updatePluginUpdateProgress(current, total, siteId) {
-        const percentage = Math.round((current / total) * 100);
-        
-        $('#progress-current').text(current);
-        $('#progress-total').text(total);
-        $('#progress-percentage').text(percentage + '%');
-        $('#progress-bar').css('width', percentage + '%');
-        $('#progress-site').text(`Сайт: ${siteId}`);
-        $('#progress-status').text(`Обновление... (${current}/${total})`);
-    }
-    
-    hidePluginUpdateProgress() {
-        $('#plugin-update-progress').remove();
-    }
+
     
     /**
      * Новые методы для работы с настройками и дополнительными функциями
