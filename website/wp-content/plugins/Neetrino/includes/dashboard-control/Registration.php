@@ -163,14 +163,25 @@ class Neetrino_Registration {
             }
             $site_url = get_site_url();
             $api_key = get_option('neetrino_dashboard_api_key');
+            
+            // Определяем статус плагина
+            $plugin_status = 'active';
+            if (!is_plugin_active(plugin_basename(NEETRINO_PLUGIN_FILE))) {
+                $plugin_status = 'inactive';
+            }
+            
             $payload = [
                 'action' => 'plugin_version_push',
                 'site_url' => $site_url,
                 'plugin_version' => $current_version,
+                'plugin_status' => $plugin_status,
                 'timestamp' => time(),
+                'update_type' => $force ? 'forced' : 'automatic',
                 // Базовая защита на первом этапе — API ключ (усилим позже подписью)
                 'api_key' => $api_key,
             ];
+
+            error_log('NEETRINO Version Push: Sending version ' . $current_version . ' with status ' . $plugin_status . ' to dashboard');
 
             // Отправляем на Dashboard
             $response = wp_remote_post(rtrim($dashboard_url, '/') . '/api.php', [
@@ -191,7 +202,7 @@ class Neetrino_Registration {
             if ($code === 200 && is_array($json) && !empty($json['success'])) {
                 update_option('neetrino_reported_version', $current_version);
                 update_option('neetrino_reported_version_at', time());
-                error_log('NEETRINO Version Push: success — ' . $current_version);
+                error_log('NEETRINO Version Push: success — ' . $current_version . ' sent to dashboard');
             } else {
                 error_log('NEETRINO Version Push: unexpected response (' . $code . '): ' . $body);
             }
