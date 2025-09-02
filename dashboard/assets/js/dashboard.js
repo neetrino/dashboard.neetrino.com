@@ -564,6 +564,10 @@ class NeetrinoDashboard {
             site.selected = this.selectedSites.has(site.id);
             const minVer = this.config.minPluginVersion || '';
             const curVer = site.plugin_version || '';
+            
+            // Логируем версию для отладки
+            console.log(`🔍 Сайт ${site.site_name}: plugin_version="${curVer}", displayVersion="${this.formatShortVersion(curVer)}"`);
+            
             let isBelowMin = false;
             if (minVer && curVer) {
                 isBelowMin = this.compareVersions(curVer, minVer) < 0;
@@ -2055,16 +2059,30 @@ class NeetrinoDashboard {
     }
 
     /**
-     * Возвращает короткую версию X.Y только из цифр
+     * Возвращает полную версию (например, 3.8.1) из всех цифр
      */
     formatShortVersion(v) {
         if (!v) return '';
+        
+        console.log(`🔧 formatShortVersion вызвана с: "${v}"`);
+        
         // Извлекаем числовые сегменты
         const parts = String(v).match(/\d+/g);
+        console.log(`🔧 Извлеченные части:`, parts);
+        
         if (!parts || parts.length === 0) return '';
-        const major = parts[0] || '0';
-        const minor = parts[1] || '0';
-        return `${parseInt(major, 10)}.${parseInt(minor, 10)}`;
+        
+        // Собираем все доступные части версии
+        let versionParts = [];
+        for (let i = 0; i < parts.length; i++) {
+            versionParts.push(parseInt(parts[i], 10));
+        }
+        
+        const result = versionParts.join('.');
+        console.log(`🔧 Результат: "${result}"`);
+        
+        // Возвращаем полную версию, соединенную точками
+        return result;
     }
     
     /**
