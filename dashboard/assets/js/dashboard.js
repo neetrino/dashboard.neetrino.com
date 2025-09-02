@@ -1190,6 +1190,10 @@ class NeetrinoDashboard {
         $('#control-panel-site-name').text(site.site_name);
         $('#control-panel-site-button').attr('onclick', `window.open('${site.site_url}', '_blank')`).attr('title', `Перейти на ${site.site_url}`);
         
+        // Обновляем версию сайта в заголовке пульта управления
+        const versionText = site.displayVersion ? `V ${site.displayVersion}` : 'V 0.0.0';
+        $('#control-panel-version').text(versionText);
+        
         // Заполняем информационные поля
         const createdAt = site.created_at ? new Date(site.created_at).toLocaleDateString('ru-RU', {
             day: '2-digit',

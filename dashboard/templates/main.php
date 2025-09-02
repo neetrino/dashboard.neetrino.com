@@ -510,6 +510,7 @@
                 <div class="flex-1 flex items-center gap-3">
                     <span class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center text-white text-lg">🎛️</span>
                     <h3 class="text-xl font-bold text-gray-900">Пульт управления сайтом</h3>
+                    <span id="control-panel-version" class="text-sm text-gray-500 ml-2">V 0.0.0</span>
                 </div>
                 
                 <!-- Название сайта по центру -->
@@ -518,7 +519,6 @@
                             title="Перейти на сайт" 
                             class="site-name-button-header" 
                             id="control-panel-site-button">
-                        <span class="text-lg mr-2">🌐</span>
                         <span id="control-panel-site-name">Название сайта</span>
                         <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
