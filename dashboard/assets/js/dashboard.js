@@ -707,7 +707,7 @@ class NeetrinoDashboard {
             return;
         }
         
-        if (command === 'update_plugins') {
+        if (command === 'update_plugin' || command === 'update_plugins') {
             const confirmed = await this.showPluginConfirm(
                 `Обновить плагин на сайте "${site.site_name}"?`,
                 'Будет выполнено обновление плагина до последней версии. Рекомендуется создать резервную копию перед обновлением.',
@@ -718,8 +718,10 @@ class NeetrinoDashboard {
         }
         
         try {
-            // Показываем индикатор выполнения только в уведомлении
-            this.showNotification('Выполняется команда...', 'info');
+            // Показываем индикатор выполнения только для команд, которые не обрабатываются через showPluginConfirm
+            if (!['update_plugin', 'update_plugins', 'deactivate_plugin', 'delete_plugin'].includes(command)) {
+                this.showNotification('Выполняется команда...', 'info');
+            }
             
             // Прямой вызов REST API сайта (PUSH)
             const response = await this.pushCommand(site.site_url, command, data);
@@ -956,17 +958,27 @@ class NeetrinoDashboard {
                 
                 this.showNotification(displayMessage, 'success');
                 
-                // Результат уже показан через уведомление
+                // Возвращаем результат для корректной обработки в bulkUpdatePlugins
+                return { success: true, message: displayMessage };
             } else {
                 throw new Error(response.message || 'Неизвестная ошибка');
             }
             
         } catch (error) {
             const msg = (error && (error.message || String(error))) || '';
-            // Не дублируем красным, если речь про минимальную версию/необходимость обновления плагина
+            
+            // Не показываем уведомления об ошибках для определенных случаев
             if (/Минимальная версия|Требуется обновить плагин/i.test(msg)) {
                 return;
             }
+            
+            // Для команды update_plugin не показываем общие ошибки, так как они обрабатываются в bulkUpdatePlugins
+            if (command === 'update_plugin' || command === 'update_plugins') {
+                console.error('Command execution error:', error);
+                // Возвращаем ошибку для корректной обработки в bulkUpdatePlugins
+                throw error;
+            }
+            
             this.showNotification('Ошибка выполнения команды: ' + msg, 'error');
             console.error('Command execution error:', error);
         }
@@ -1074,11 +1086,15 @@ class NeetrinoDashboard {
             clearTimeout(timeoutId);
             
             if (!response.ok) {
-                if (response.status === 426) {
+                if (response.status === 401) {
+                    // Unauthorized - проблема с API ключом
+                    throw new Error(`HTTP 401: Ошибка авторизации - проверьте API ключ сайта`);
+                } else if (response.status === 426) {
                     // Upgrade Required по версии плагина
                     throw new Error(`Требуется обновить плагин до версии ${this.config.minPluginVersion || ''}+`);
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
             
             return await response.json();
@@ -1300,10 +1316,21 @@ class NeetrinoDashboard {
         let completed = 0;
         let failed = 0;
         
+        // Проверяем, что все выбранные сайты имеют API ключи
+        const sitesWithoutKeys = selectedArray.filter(siteId => {
+            const site = this.sites.find(s => s.id === siteId);
+            return !site || !site.api_key;
+        });
+        
+        if (sitesWithoutKeys.length > 0) {
+            this.showNotification(`Ошибка: ${sitesWithoutKeys.length} сайтов не имеют API ключей`, 'error');
+            return;
+        }
+        
         // Показываем прогресс-бар
         this.showPluginUpdateProgress(total);
         
-        this.showNotification(`Начинаем обновление плагина Neetrino на ${total} сайтах...`, 'info');
+        this.showNotification(`🔄 Начинаем обновление плагина Neetrino на ${total} сайтах...`, 'info');
         
         // Обновляем плагины последовательно с задержкой
         for (let i = 0; i < selectedArray.length; i++) {
@@ -1316,31 +1343,68 @@ class NeetrinoDashboard {
                 // Выполняем команду обновления плагина
                 const result = await this.executeCommand(siteId, 'update_plugin');
                 
-                if (result.success) {
+                // Проверяем, что результат существует и содержит success
+                if (result && result.success) {
                     completed++;
-                    console.log(`✅ Плагин обновлен на сайте ${siteId}:`, result.message);
-                } else {
+                    console.log(`✅ Плагин обновлен на сайте ${siteId}:`, result.message || 'Успешно');
+                } else if (result && !result.success) {
                     failed++;
-                    console.error(`❌ Ошибка обновления плагина на сайте ${siteId}:`, result.message);
+                    console.error(`❌ Ошибка обновления плагина на сайте ${siteId}:`, result.message || 'Неизвестная ошибка');
+                } else {
+                    // Если результат undefined, команда была обработана через showPluginConfirm
+                    // В этом случае executePushCommand уже показал уведомление и вернул результат
+                    // Поэтому мы не должны показывать дополнительное уведомление здесь
+                    completed++;
+                    console.log(`✅ Плагин обновлен на сайте ${siteId}: команда выполнена`);
                 }
                 
             } catch (error) {
                 failed++;
-                console.error(`❌ Ошибка обновления плагина на сайте ${siteId}:`, error);
+                const errorMessage = error.message || String(error);
+                
+                // Специальная обработка для HTTP 401 ошибок
+                if (errorMessage.includes('HTTP 401') || errorMessage.includes('Unauthorized')) {
+                    console.error(`❌ Ошибка авторизации на сайте ${siteId}: ${errorMessage}`);
+                } else {
+                    console.error(`❌ Ошибка обновления плагина на сайте ${siteId}:`, error);
+                }
             }
             
             // Задержка между обновлениями (2-3 секунды)
             if (i < selectedArray.length - 1) {
                 await this.delay(2500);
             }
+            
+            // Показываем промежуточный результат каждые 5 сайтов
+            if ((i + 1) % 5 === 0 || i === selectedArray.length - 1) {
+                const progressMessage = `Обновлено ${completed} из ${total} сайтов${failed > 0 ? ` (${failed} с ошибками)` : ''}`;
+                this.showNotification(progressMessage, failed === 0 ? 'info' : 'warning');
+            }
         }
         
         // Скрываем прогресс-бар
         this.hidePluginUpdateProgress();
         
-        // Показываем результат
-        const message = `Обновление завершено: ${completed} успешно, ${failed} с ошибками`;
-        this.showNotification(message, failed === 0 ? 'success' : 'warning');
+        // Показываем результат с более точной информацией
+        let message, type;
+        if (failed === 0) {
+            message = `✅ Плагин Neetrino успешно обновлен на ${completed} сайтах`;
+            type = 'success';
+        } else if (completed === 0) {
+            message = `❌ Ошибка обновления плагина на всех ${failed} сайтах`;
+            type = 'error';
+        } else {
+            message = `⚠️ Обновление завершено: ${completed} успешно, ${failed} с ошибками`;
+            type = 'warning';
+        }
+        
+        this.showNotification(message, type);
+        
+        // Логируем детальную информацию для отладки
+        console.log(`📊 Результат массового обновления: ${completed} успешно, ${failed} с ошибками`);
+        if (failed > 0) {
+            console.warn(`⚠️ Обратите внимание на ошибки в консоли для детальной информации`);
+        }
         
         // Обновляем статус сайтов
         this.refreshSelectedSites();
