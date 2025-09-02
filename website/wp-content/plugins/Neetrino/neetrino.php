@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Neetrino
  * Description: Modular WordPress plugin for enhanced website management and integration
- * Version: 3.8.1
+ * Version: 3.8.2
  * Author: Neetrino
  * Text Domain: neetrino
  */
