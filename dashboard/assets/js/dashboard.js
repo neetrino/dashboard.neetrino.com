@@ -816,14 +816,7 @@ class NeetrinoDashboard {
                 
                 this.showNotification(displayMessage, 'success');
                 
-                // Показываем результат в модальном окне
-                this.showCommandResult({
-                    success: true,
-                    message: displayMessage,
-                    command: command,
-                    timestamp: Date.now() / 1000,
-                    data: response.data
-                });
+                // Результат уже показан через уведомление
             } else {
                 throw new Error(response.message || 'Неизвестная ошибка');
             }
@@ -963,14 +956,7 @@ class NeetrinoDashboard {
                 
                 this.showNotification(displayMessage, 'success');
                 
-                // Показываем результат в модальном окне
-                this.showCommandResult({
-                    success: true,
-                    message: displayMessage,
-                    command: command,
-                    timestamp: Date.now() / 1000,
-                    data: response.data
-                });
+                // Результат уже показан через уведомление
             } else {
                 throw new Error(response.message || 'Неизвестная ошибка');
             }
@@ -1538,11 +1524,7 @@ class NeetrinoDashboard {
     /**
      * Показ результата команды в модальном окне
      */
-    showCommandResult(result) {
-        const content = $('#command-result-content');
-        content.html(this.generateCommandResultHtml(result));
-        $('#command-result-modal').removeClass('hidden');
-    }
+
     
     /**
      * Генерация HTML для результата команды
