@@ -95,6 +95,9 @@ switch($action) {
     case 'restore_all_sites':
         handle_restore_all_sites();
         break;
+    case 'update_site_status':
+        handle_update_site_status();
+        break;
     case 'plugin_version_push':
         handle_plugin_version_push();
         break;
@@ -949,6 +952,59 @@ function handle_restore_all_sites() {
             'restored' => $restored,
             'skipped' => $skipped
         ]);
+        
+    } catch (Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'error' => 'Database error: ' . $e->getMessage()
+        ]);
+    }
+}
+
+/**
+ * Обновление статуса сайта при успешных командах
+ */
+function handle_update_site_status() {
+    global $pdo;
+    
+    $site_url = $_POST['site_url'] ?? '';
+    $status = $_POST['status'] ?? 'online';
+    
+    if (empty($site_url)) {
+        echo json_encode(['success' => false, 'error' => 'Site URL required']);
+        return;
+    }
+    
+    $site_domain = normalize_url_to_domain($site_url);
+    
+    try {
+        // Обновляем статус и время последней активности для домена
+        $stmt = $pdo->prepare("
+            UPDATE sites 
+            SET status = ?, last_seen = NOW() 
+            WHERE site_url LIKE ? OR site_url LIKE ? OR site_url LIKE ? OR site_url LIKE ?
+        ");
+        $stmt->execute([
+            $status,
+            "%://$site_domain",
+            "%://$site_domain/%", 
+            "%://www.$site_domain",
+            "%://www.$site_domain/%"
+        ]);
+        
+        if ($stmt->rowCount() > 0) {
+            echo json_encode([
+                'success' => true,
+                'message' => 'Site status updated successfully',
+                'status' => $status,
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        } else {
+            echo json_encode([
+                'success' => false,
+                'error' => 'Site not found for domain: ' . $site_domain
+            ]);
+        }
         
     } catch (Exception $e) {
         echo json_encode([

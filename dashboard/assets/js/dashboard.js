@@ -733,10 +733,15 @@ class NeetrinoDashboard {
                 switch(command) {
                     case 'get_info':
                         displayMessage = 'Информация о сайте получена';
+                        // Обновляем статус сайта на online при успешном получении информации
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'get_status':
                         displayMessage = 'Статус сайта обновлен';
+                        // Обновляем статус сайта на online при успешной проверке
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
+                        
                         // NEW: если плагин вернул версию – сразу обновим UI и попытаемся сохранить её в БД
                         try {
                             if (response.data && response.data.plugin_version) {
@@ -766,6 +771,8 @@ class NeetrinoDashboard {
                     
                     case 'update_plugins':
                         displayMessage = 'Обновление плагинов завершено';
+                        // Обновляем статус сайта на online при успешном обновлении
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'maintenance_enable':
@@ -787,25 +794,37 @@ class NeetrinoDashboard {
                     
                     case 'clear_cache':
                         displayMessage = 'Кэш очищен успешно';
+                        // Обновляем статус сайта на online при успешной очистке кэша
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     case 'backup_create':
                         displayMessage = 'Бэкап создан успешно';
+                        // Обновляем статус сайта на online при успешном создании бэкапа
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'optimize_db':
                         displayMessage = 'База данных оптимизирована';
+                        // Обновляем статус сайта на online при успешной оптимизации БД
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'update_core':
                         displayMessage = 'WordPress обновлен';
+                        // Обновляем статус сайта на online при успешном обновлении WordPress
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'security_scan':
                         displayMessage = 'Сканирование безопасности завершено';
+                        // Обновляем статус сайта на online при успешном сканировании
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'performance_test':
                         displayMessage = 'Тест производительности завершен';
+                        // Обновляем статус сайта на online при успешном тесте
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                         break;
                     
                     case 'deactivate_plugin':
@@ -814,9 +833,14 @@ class NeetrinoDashboard {
                     
                     default:
                         displayMessage = response.message || 'Команда выполнена успешно';
+                        // Для неизвестных команд также обновляем статус на online
+                        await this.updateSiteStatusInDatabase(site.site_url, 'online');
                 }
                 
                 this.showNotification(displayMessage, 'success');
+                
+                // Обновляем статус сайта на online при любой успешной команде
+                await this.updateSiteStatusInDatabase(site.site_url, 'online');
                 
                 // Результат уже показан через уведомление
             } else {
@@ -825,6 +849,10 @@ class NeetrinoDashboard {
             
         } catch (error) {
             const msg = (error && (error.message || String(error))) || '';
+            
+            // Обновляем статус сайта на offline при ошибке команды
+            await this.updateSiteStatusInDatabase(site.site_url, 'offline');
+            
             // Не дублируем красным, если речь про минимальную версию/необходимость обновления плагина
             if (/Минимальная версия|Требуется обновить плагин/i.test(msg)) {
                 return;
@@ -958,6 +986,9 @@ class NeetrinoDashboard {
                 
                 this.showNotification(displayMessage, 'success');
                 
+                // Обновляем статус сайта на online при успешной команде
+                await this.updateSiteStatusInDatabase(site.site_url, 'online');
+                
                 // Возвращаем результат для корректной обработки в bulkUpdatePlugins
                 return { success: true, message: displayMessage };
             } else {
@@ -971,6 +1002,9 @@ class NeetrinoDashboard {
             if (/Минимальная версия|Требуется обновить плагин/i.test(msg)) {
                 return;
             }
+            
+            // Обновляем статус сайта на offline при ошибке команды
+            await this.updateSiteStatusInDatabase(site.site_url, 'offline');
             
             // Для команды update_plugin не показываем общие ошибки, так как они обрабатываются в bulkUpdatePlugins
             if (command === 'update_plugin' || command === 'update_plugins') {
@@ -1113,6 +1147,46 @@ class NeetrinoDashboard {
      */
     async checkSiteStatus(siteId) {
         await this.executeCommand(siteId, 'get_status');
+    }
+    
+    /**
+     * Обновление статуса сайта в базе данных
+     */
+    async updateSiteStatusInDatabase(siteUrl, status = 'online') {
+        try {
+            console.log(`🔄 Обновление статуса сайта ${siteUrl} на ${status} в базе данных...`);
+            
+            const response = await this.apiRequest('POST', 'update_site_status', {
+                site_url: siteUrl,
+                status: status
+            });
+            
+            if (response.success) {
+                console.log(`✅ Статус сайта ${siteUrl} обновлен на ${status}`);
+                
+                // Обновляем локальное состояние сайта
+                const site = this.sites.find(s => s.site_url === siteUrl || s.site_url + '/' === siteUrl);
+                if (site) {
+                    site.status = status;
+                    site.last_seen = new Date().toISOString();
+                    
+                    // Перерисовываем интерфейс
+                    this.renderSites();
+                    this.updateStats();
+                    
+                    console.log(`🔄 Локальное состояние сайта ${site.site_name} обновлено`);
+                }
+                
+                return true;
+            } else {
+                console.warn(`⚠️ Не удалось обновить статус сайта ${siteUrl}:`, response.error);
+                return false;
+            }
+            
+        } catch (error) {
+            console.error(`❌ Ошибка обновления статуса сайта ${siteUrl}:`, error);
+            return false;
+        }
     }
     
     /**
