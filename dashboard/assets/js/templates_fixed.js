@@ -26,21 +26,24 @@ window.NeetrinoTemplates = {
                        data-site-id="${site.id}"
                        ${site.selected ? 'checked' : ''}>
                 
-                <!-- Заголовок карточки: имя отдельно, метки справа -->
+                <!-- Заголовок карточки: имя отдельно -->
                 <div class="site-card-header">
-                    <div class="flex items-center gap-2">
-                        <a href="${site.site_url}" 
-                           target="_blank" 
-                           class="site-name-clickable"
-                           title="Перейти на сайт: ${this.escapeHtml(site.site_url)}">
-                            <h3 class="site-card-title">
-                                ${this.escapeHtml(site.site_name)}
-                            </h3>
-                            <svg class="site-url-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                            </svg>
-                        </a>
-                        ${site.displayVersion ? `<span class="ml-1 text-xs font-semibold text-gray-700 align-middle whitespace-nowrap">${this.escapeHtml(site.displayVersion)}</span>` : ''}
+                    <div class="flex flex-col items-center gap-1 text-center w-full">
+                        <div class="flex items-center gap-2 justify-center w-full" style="min-width: 200px;">
+                            <a href="${site.site_url}" 
+                               target="_blank" 
+                               class="site-name-clickable text-center flex items-center gap-2"
+                               title="Перейти на сайт: ${this.escapeHtml(site.site_url)}">
+                                <h3 class="site-card-title text-center" style="text-align: center; white-space: nowrap;">
+                                    ${this.escapeHtml(site.site_name)}
+                                </h3>
+                                <svg class="site-url-icon flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <!-- Версия по центру под названием сайта -->
+                        ${site.displayVersion ? `<div style="color: black; font-size: 12px; text-align: center; width: 100%;">v${this.escapeHtml(site.displayVersion)}</div>` : ''}
                         ${site.isBelowMin ? ` <span class="ml-1 inline-block px-2 py-0.5 rounded bg-red-100 text-red-700 text-xs align-middle whitespace-nowrap" title="Требуется v${this.escapeHtml(site.min_required_version)}+">ниже минимума</span>` : ''}
                     </div>
                 </div>
@@ -60,7 +63,7 @@ window.NeetrinoTemplates = {
                             data-site-id="${site.id}" 
                             class="modern-btn modern-btn-black btn-commands">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h6m0-6l-6 6"></path>
                         </svg>
                         Панель команд
                     </button>
