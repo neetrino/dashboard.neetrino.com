@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Neetrino
  * Description: Modular WordPress plugin for enhanced website management and integration
- * Version: 3.8.0
+ * Version: 3.8.1
  * Author: Neetrino
  * Text Domain: neetrino
  */
@@ -28,7 +28,7 @@ if (!defined('NEETRINO_VERSION')) {
         define('NEETRINO_VERSION', $ver !== '' ? $ver : '0.0.0');
     } else {
         // Fallback if get_file_data is not available for some reason
-        define('NEETRINO_VERSION', '0.0.0');
+        define('NEETRINO_VERSION', '0..0.0');
     }
 }
 
@@ -40,8 +40,6 @@ require_once plugin_dir_path(__FILE__) . 'includes/dashboard-control/GET_Control
 require_once plugin_dir_path(__FILE__) . 'includes/dashboard-control/Connection_Guard.php';
 require_once plugin_dir_path(__FILE__) . 'includes/dashboard-control/Connection_Page.php';
 require_once plugin_dir_path(__FILE__) . 'includes/dashboard-control/Connection_Admin.php';
-
-
 
 class Neetrino {
     private static $neetrino_modules = [];
@@ -93,9 +91,15 @@ class Neetrino {
      */
     public static function activate_module($module_slug) {
         $active_modules = get_option('neetrino_active_modules', self::get_default_active_modules());
+        
         if (!in_array($module_slug, $active_modules)) {
             $active_modules[] = $module_slug;
             update_option('neetrino_active_modules', $active_modules);
+            
+            // Обновляем статус в массиве
+            if (isset(self::$neetrino_modules[$module_slug])) {
+                self::$neetrino_modules[$module_slug]['active'] = true;
+            }
         }
     }
 
@@ -104,63 +108,47 @@ class Neetrino {
      */
     public static function deactivate_module($module_slug) {
         $active_modules = get_option('neetrino_active_modules', self::get_default_active_modules());
+        
         $key = array_search($module_slug, $active_modules);
         if ($key !== false) {
             unset($active_modules[$key]);
             update_option('neetrino_active_modules', array_values($active_modules));
+            
+            // Обновляем статус в массиве
+            if (isset(self::$neetrino_modules[$module_slug])) {
+                self::$neetrino_modules[$module_slug]['active'] = false;
+            }
         }
     }
 
     /**
-     * Получает все модули (активные и неактивные)
+     * Получает все модули
      */
     public static function get_all_modules() {
-        if (empty(self::$neetrino_modules)) {
-            self::detect_modules();
-        }
         return self::$neetrino_modules;
     }
 
     /**
-     * Получает все модули отсортированные по активности (активные первыми)
+     * Получает отсортированные модули
      */
     public static function get_sorted_modules() {
-        $all_modules = self::get_all_modules();
+        $modules = self::$neetrino_modules;
         
-        // Разделяем на активные и неактивные
-        $active_modules = [];
-        $inactive_modules = [];
-        
-        foreach ($all_modules as $slug => $module) {
-            if ($module['active']) {
-                $active_modules[$slug] = $module;
-            } else {
-                $inactive_modules[$slug] = $module;
-            }
-        }
-        
-        // Сортируем активные модули по номерам
-        uksort($active_modules, function($a, $b) {
-            return self::get_module_number($a) - self::get_module_number($b);
+        // Сортируем по номеру модуля
+        uasort($modules, function($a, $b) {
+            $num_a = self::get_module_number(array_search($a, self::$neetrino_modules));
+            $num_b = self::get_module_number(array_search($b, self::$neetrino_modules));
+            return $num_a - $num_b;
         });
         
-        // Сортируем неактивные модули по номерам
-        uksort($inactive_modules, function($a, $b) {
-            return self::get_module_number($a) - self::get_module_number($b);
-        });
-        
-        // Объединяем: сначала активные, потом неактивные
-        return array_merge($active_modules, $inactive_modules);
+        return $modules;
     }
 
     /**
-     * Получает только активные модули (для обратной совместимости)
+     * Получает модули для отображения
      */
     public static function get_modules() {
-        if (empty(self::$neetrino_modules)) {
-            self::detect_modules();
-        }
-        // Возвращаем только активные модули для обратной совместимости
+        // Возвращаем только активные модули для корректного отображения в меню
         return array_filter(self::$neetrino_modules, function($module) {
             return $module['active'];
         });
@@ -210,17 +198,22 @@ class Neetrino {
         }
         
         // Load required core files
-        // require_once plugin_dir_path(__FILE__) . 'includes/New_Plugin.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Module_Config.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Assets.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Dashboard.php';
         require_once plugin_dir_path(__FILE__) . 'includes/Admin.php';
+        
+        // Plugin Update System - система отслеживания обновлений плагина
+        require_once plugin_dir_path(__FILE__) . 'includes/Plugin_Update_Manager.php';
         
         // Инициализация Dashboard Connect (файлы уже подключены выше)
         Neetrino_Dashboard_Connect::init();
         // REST API инициализируется автоматически в классе
         
         new Neetrino_Admin();
+        
+        // Инициализируем менеджер обновлений
+        new Neetrino_Plugin_Update_Manager();
 
         // Hide WordPress footer on all admin pages
         add_action('admin_head', function() {
@@ -298,84 +291,52 @@ class Neetrino {
             wp_send_json_error('Invalid nonce');
         }
         
-        if (!current_user_can('administrator')) {
-            wp_send_json_error('Insufficient permissions');
+        $dashboard_url = sanitize_text_field($_POST['dashboard_url']);
+        $api_key = sanitize_text_field($_POST['api_key']);
+        
+        if (empty($dashboard_url) || empty($api_key)) {
+            wp_send_json_error('Dashboard URL and API key are required');
         }
         
-        // Сбрасываем состояние и пытаемся подключиться
-        Neetrino_Connection_Guard::reset_connection_status();
-        $result = Neetrino_Registration::register_with_dashboard();
+        // Пытаемся подключиться
+        $result = Neetrino_Registration::register_with_dashboard($dashboard_url, $api_key);
         
         if ($result['success']) {
-            wp_send_json_success([
-                'connected' => true,
-                'message' => 'Подключение установлено успешно'
-            ]);
+            wp_send_json_success('Successfully connected to dashboard');
         } else {
-            wp_send_json_error([
-                'connected' => false,
-                'message' => $result['error'] ?? 'Ошибка подключения'
-            ]);
+            wp_send_json_error($result['message']);
         }
     }
-
 }
-
-// Hook для активации плагина - устанавливаем дефолтные настройки
-register_activation_hook(__FILE__, function() {
-    // Устанавливаем дефолтные активные модули только если опция еще не существует
-    if (!get_option('neetrino_active_modules')) {
-        update_option('neetrino_active_modules', ['login-page', 'maintenance-mode']);
-    }
-    
-    // Сбрасываем статус подключения для новой попытки
-    delete_option('neetrino_connection_attempts');
-    delete_option('neetrino_last_connection_attempt');
-    delete_option('neetrino_connection_force_manual');
-    
-    // Автоматическая регистрация с Dashboard
-    $result = Neetrino_Registration::register_with_dashboard();
-    
-    if (!$result['success']) {
-        // Если не удалось подключиться сразу, планируем попытки
-        error_log('NEETRINO Activation: Initial connection failed, will retry automatically');
-        update_option('neetrino_connection_attempts', 1);
-        update_option('neetrino_last_connection_attempt', time());
-    } else {
-        error_log('NEETRINO Activation: Connected successfully on activation');
-    }
-});
 
 // Инициализация плагина
 add_action('plugins_loaded', ['Neetrino', 'init']);
 
-// После загрузки плагинов: если версия изменилась, пушим новую версию на Dashboard (лёгкая операция)
-add_action('plugins_loaded', function() {
-    // Проверяем версию плагина для обновлений
-    if (function_exists('Neetrino_Registration::push_version_if_changed')) {
-        Neetrino_Registration::push_version_if_changed();
-    } else {
-        // Для ранней совместимости, если метод ещё не доступен
-        if (class_exists('Neetrino_Registration') && method_exists('Neetrino_Registration', 'push_version_if_changed')) {
-            Neetrino_Registration::push_version_if_changed();
-        }
+// Хуки активации и деактивации
+register_activation_hook(__FILE__, function() {
+    // Устанавливаем активные модули по умолчанию
+    $default_modules = ['login-page', 'maintenance-mode'];
+    if (!get_option('neetrino_active_modules')) {
+        update_option('neetrino_active_modules', $default_modules);
     }
     
-    // Проверяем подключение после обновления плагина
-    $current_version = defined('NEETRINO_VERSION') ? NEETRINO_VERSION : '0.0.0';
-    $stored_version = get_option('neetrino_last_checked_version', '0.0.0');
+    // Очищаем старые настройки если есть
+    delete_option('neetrino_dashboard_domain');
+    delete_option('neetrino_dashboard_api_key');
     
-    if (version_compare($current_version, $stored_version, '>')) {
-        // Версия изменилась - проверяем подключение
-        update_option('neetrino_last_checked_version', $current_version);
-        
-        if (!Neetrino_Connection_Guard::is_connected()) {
-            // Сбрасываем ограничения для попыток подключения после обновления
-            delete_option('neetrino_connection_attempts');
-            delete_option('neetrino_last_connection_attempt');
-            delete_option('neetrino_connection_force_manual');
-            
-            error_log('NEETRINO: Plugin updated to ' . $current_version . ', resetting connection attempts');
-        }
+    // Автоматическая перерегистрация после обновления
+    if (class_exists('Neetrino_Registration')) {
+        Neetrino_Registration::register_with_dashboard();
     }
+    
+    error_log('NEETRINO: Plugin activated successfully');
 });
+
+register_deactivation_hook(__FILE__, function() {
+    // Очищаем CRON события
+    wp_clear_scheduled_hook('neetrino_check_update_event');
+    
+    error_log('NEETRINO: Plugin deactivated');
+});
+
+

@@ -217,7 +217,7 @@ class Neetrino_Connection_Page {
                 <div class="neetrino-details">
                     <dl>
                         <dt>URL дашборда:</dt>
-                        <dd><?php echo esc_html(Neetrino_Dashboard_Connect::DASHBOARD_URL); ?></dd>
+                        <dd><?php echo esc_html(Neetrino_Dashboard_Connect::get_dashboard_url()); ?></dd>
                         <dt>Сайт:</dt>
                         <dd><?php echo esc_html(get_site_url()); ?></dd>
                         <dt>Попыток выполнено:</dt>

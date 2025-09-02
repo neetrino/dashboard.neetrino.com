@@ -964,11 +964,18 @@ function handle_restore_all_sites() {
 function handle_plugin_version_push() {
     global $pdo;
 
+    error_log("NEETRINO Dashboard: handle_plugin_version_push() вызван");
+    error_log("NEETRINO Dashboard: POST данные: " . json_encode($_POST));
+
     $site_url = $_POST['site_url'] ?? '';
     $plugin_version = $_POST['plugin_version'] ?? '';
     $api_key = $_POST['api_key'] ?? '';
 
+    // Логируем получение версии
+    error_log("NEETRINO Dashboard: Received version push - URL: $site_url, Version: $plugin_version");
+
     if (empty($site_url) || empty($plugin_version)) {
+        error_log("NEETRINO Dashboard: Version push failed - missing required fields");
         echo json_encode(['success' => false, 'error' => 'site_url and plugin_version are required']);
         return;
     }
@@ -1012,6 +1019,9 @@ function handle_plugin_version_push() {
             VALUES (?, ?, NOW(), 'push', 1)
             ON DUPLICATE KEY UPDATE plugin_version = VALUES(plugin_version), last_seen_at = NOW(), source = 'push', signature_ok = 1");
         $stmt->execute([$site['id'], $plugin_version]);
+
+        // Логируем успешное обновление версии
+        error_log("NEETRINO Dashboard: Version updated successfully - Site ID: {$site['id']}, Version: $plugin_version");
 
         echo json_encode(['success' => true, 'message' => 'Version updated', 'site_id' => $site['id'], 'plugin_version' => $plugin_version]);
     } catch (Exception $e) {

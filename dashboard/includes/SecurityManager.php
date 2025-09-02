@@ -34,7 +34,7 @@ class SecurityManager {
         
         $registration_data = [
             'dashboard_ip' => $this->my_ip,
-            'dashboard_domain' => 'dashboard.neetrino.com',
+            'dashboard_domain' => DASHBOARD_DOMAIN,
             'api_key' => $api_key,
             'api_key_hash' => $api_key_hash,
             'status' => 'registered',

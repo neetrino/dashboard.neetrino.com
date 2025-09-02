@@ -148,7 +148,10 @@ class Neetrino {
      * Получает модули для отображения
      */
     public static function get_modules() {
-        return self::get_sorted_modules();
+        // Возвращаем только активные модули для корректного отображения в меню
+        return array_filter(self::$neetrino_modules, function($module) {
+            return $module['active'];
+        });
     }
 
     /**
@@ -320,6 +323,11 @@ register_activation_hook(__FILE__, function() {
     // Очищаем старые настройки если есть
     delete_option('neetrino_dashboard_domain');
     delete_option('neetrino_dashboard_api_key');
+    
+    // Автоматическая перерегистрация после обновления
+    if (class_exists('Neetrino_Registration')) {
+        Neetrino_Registration::register_with_dashboard();
+    }
     
     error_log('NEETRINO: Plugin activated successfully');
 });

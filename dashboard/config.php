@@ -54,12 +54,14 @@ if ($is_local) {
     ini_set('display_errors', 1);
     ini_set('error_reporting', E_ALL);
     date_default_timezone_set('Europe/Moscow');
+    define('DASHBOARD_DOMAIN', 'dashboard.local');
 } else {
     // Продакшн окружение
     ini_set('display_errors', 0);
     ini_set('log_errors', 1);
     ini_set('error_log', __DIR__ . '/logs/php_errors.log');
     date_default_timezone_set('Europe/Moscow');
+    define('DASHBOARD_DOMAIN', 'dashboard.neetrino.com');
 }
 
 // === ПОДКЛЮЧЕНИЕ К MYSQL ===

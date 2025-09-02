@@ -31,7 +31,7 @@ class Neetrino_Registration {
                 $scheme = (strpos($saved_domain, 'localhost') !== false || strpos($saved_domain, '127.0.0.1') !== false) ? 'http' : 'https';
                 $dashboard_url = $scheme . '://' . rtrim($saved_domain, '/');
             } else {
-                $dashboard_url = 'http://dashboard.local/';
+                $dashboard_url = Neetrino_Dashboard_Connect::get_dashboard_url();
             }
             
             error_log("NEETRINO Registration: Using Dashboard URL: " . $dashboard_url);
@@ -137,32 +137,52 @@ class Neetrino_Registration {
 
     /**
      * Пуш версии плагина на Dashboard при изменении
+     * @param bool $force Принудительная отправка
+     * @param string|null $specific_version Конкретная версия для отправки (если null, берется из константы)
      */
-    public static function push_version_if_changed($force = false) {
+    public static function push_version_if_changed($force = false, $specific_version = null) {
         try {
-            if (!defined('NEETRINO_VERSION')) {
+            error_log('NEETRINO Version Push: push_version_if_changed() вызван с force=' . ($force ? 'true' : 'false') . ', specific_version=' . ($specific_version ?: 'null'));
+            
+            // Определяем версию для отправки
+            if ($specific_version !== null) {
+                $current_version = $specific_version;
+                error_log('NEETRINO Version Push: Используем переданную версию: ' . $current_version);
+            } elseif (defined('NEETRINO_VERSION')) {
+                $current_version = NEETRINO_VERSION;
+                error_log('NEETRINO Version Push: Используем версию из константы: ' . $current_version);
+            } else {
+                error_log('NEETRINO Version Push: NEETRINO_VERSION не определена и specific_version не передан, выходим');
                 return; // Нет версии — выходим тихо
             }
-
-            $current_version = NEETRINO_VERSION;
             $stored_version = get_option('neetrino_reported_version');
+            
+            error_log('NEETRINO Version Push: Текущая версия: ' . $current_version . ', Сохраненная версия: ' . ($stored_version ?: 'null'));
 
             // Если версия не изменилась и не принудительно — выходим
             if (!$force && $stored_version === $current_version) {
+                error_log('NEETRINO Version Push: Версия не изменилась и не принудительно, выходим');
                 return;
             }
 
             // Готовим данные
             // URL дашборда: домен из настроек, иначе дефолт
             $saved_domain = get_option('neetrino_dashboard_domain');
+            error_log('NEETRINO Version Push: Сохраненный домен: ' . ($saved_domain ?: 'null'));
+            
             if (!empty($saved_domain)) {
                 $scheme = (strpos($saved_domain, 'localhost') !== false || strpos($saved_domain, '127.0.0.1') !== false) ? 'http' : 'https';
                 $dashboard_url = $scheme . '://' . rtrim($saved_domain, '/');
             } else {
-                $dashboard_url = 'https://dashbord.neetrino.com';
+                $dashboard_url = Neetrino_Dashboard_Connect::get_dashboard_url();
             }
+            
+            error_log('NEETRINO Version Push: URL дашборда: ' . $dashboard_url);
+            
             $site_url = get_site_url();
             $api_key = get_option('neetrino_dashboard_api_key');
+            
+            error_log('NEETRINO Version Push: URL сайта: ' . $site_url . ', API ключ: ' . ($api_key ? 'установлен' : 'не установлен'));
             
             // Определяем статус плагина
             $plugin_status = 'active';
@@ -181,10 +201,14 @@ class Neetrino_Registration {
                 'api_key' => $api_key,
             ];
 
+            error_log('NEETRINO Version Push: Payload: ' . json_encode($payload));
             error_log('NEETRINO Version Push: Sending version ' . $current_version . ' with status ' . $plugin_status . ' to dashboard');
 
             // Отправляем на Dashboard
-            $response = wp_remote_post(rtrim($dashboard_url, '/') . '/api.php', [
+            $final_url = rtrim($dashboard_url, '/') . '/api.php';
+            error_log('NEETRINO Version Push: Отправляем POST запрос на: ' . $final_url);
+            
+            $response = wp_remote_post($final_url, [
                 'body' => $payload,
                 'timeout' => 15,
                 'sslverify' => false,

@@ -33,7 +33,7 @@ class Neetrino_Dashboard {
             } elseif ($_GET['reconnect'] === 'error') {
                 echo '<div class="notice notice-error is-dismissible"><p>';
                 echo '<strong>Ошибка!</strong> Не удалось перерегистрировать сайт в Dashboard. ';
-                echo 'Проверьте что Dashboard доступен по адресу: ' . esc_html(Neetrino_Dashboard_Connect::DASHBOARD_URL);
+                echo 'Проверьте что Dashboard доступен по адресу: ' . esc_html(Neetrino_Dashboard_Connect::get_dashboard_url());
                 echo '</p></div>';
             }
         }

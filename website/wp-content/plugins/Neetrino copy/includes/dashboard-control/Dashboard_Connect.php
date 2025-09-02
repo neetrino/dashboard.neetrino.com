@@ -7,7 +7,15 @@
 class Neetrino_Dashboard_Connect {
     
     // URL dashboard (реальный сервер)
-    const DASHBOARD_URL = 'http://dashboard.local/';
+    const DASHBOARD_URL = 'https://dashboard.local/';
+    
+    /**
+     * Получить URL дашборда - единая точка управления
+     * @return string URL дашборда
+     */
+    public static function get_dashboard_url() {
+        return self::DASHBOARD_URL;
+    }
     
     /**
      * Инициализация
@@ -99,7 +107,7 @@ class Neetrino_Dashboard_Connect {
             'api_key' => $api_key
         ];
         
-        $response = wp_remote_post(self::DASHBOARD_URL . '/api.php', [
+        $response = wp_remote_post(self::get_dashboard_url() . '/api.php', [
             'body' => $data,
             'timeout' => 15,
             'headers' => [
@@ -180,7 +188,7 @@ class Neetrino_Dashboard_Connect {
         return [
             'registered' => $registration_status === 'registered',
             'site_id' => $site_id,
-            'dashboard_url' => self::DASHBOARD_URL,
+            'dashboard_url' => self::get_dashboard_url(),
             'dashboard_ip' => $dashboard_ip,
             'api_key_set' => !empty($api_key),
             'security_version' => '2.0',
@@ -234,7 +242,7 @@ class Neetrino_Dashboard_Connect {
                 'message' => $result['message']
             ];
             
-            wp_remote_post(self::DASHBOARD_URL . '/api.php', [
+            wp_remote_post(self::get_dashboard_url() . '/api.php', [
                 'body' => $response_data,
                 'timeout' => 15
             ]);

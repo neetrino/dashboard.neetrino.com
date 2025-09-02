@@ -858,17 +858,17 @@ class Neetrino_REST_API {
             // так как это системные команды, выполняемые с API ключом
             error_log('Neetrino REST API: Пропускаем проверку прав пользователя для системной команды');
             
-            // Проверяем существование класса Admin
-            error_log('Neetrino REST API: Проверяем существование класса Neetrino_Admin');
-            if (class_exists('Neetrino_Admin')) {
-                error_log('Neetrino REST API: Класс Neetrino_Admin найден, создаем экземпляр');
+            // Проверяем существование класса Plugin Update Manager
+            error_log('Neetrino REST API: Проверяем существование класса Neetrino_Plugin_Update_Manager');
+            if (class_exists('Neetrino_Plugin_Update_Manager')) {
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Update_Manager найден, создаем экземпляр');
                 
-                // Создаем экземпляр Admin класса
-                $admin = new Neetrino_Admin();
+                // Создаем экземпляр менеджера обновлений
+                $update_manager = new Neetrino_Plugin_Update_Manager();
                 
                 // Вызываем метод обновления
                 error_log('Neetrino REST API: Вызываем perform_plugin_update()');
-                $result = $admin->perform_plugin_update();
+                $result = $update_manager->perform_plugin_update();
                 error_log('Neetrino REST API: Результат perform_plugin_update(): ' . json_encode($result));
                 
                 if ($result['success']) {
@@ -890,10 +890,10 @@ class Neetrino_REST_API {
                     ];
                 }
             } else {
-                error_log('Neetrino REST API: Класс Neetrino_Admin не найден');
+                error_log('Neetrino REST API: Класс Neetrino_Plugin_Update_Manager не найден');
                 return [
                     'success' => false,
-                    'message' => 'Класс администратора не найден'
+                    'message' => 'Менеджер обновлений не найден'
                 ];
             }
             
