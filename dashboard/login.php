@@ -69,21 +69,25 @@ $csrf_token = $auth->generateCSRFToken();
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1d4ed8 100%);
             min-height: 100vh;
         }
         .login-card {
-            backdrop-filter: blur(10px);
-            background: rgba(255, 255, 255, 0.9);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
         }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
     <div class="login-card rounded-lg p-8 w-full max-w-md">
         <div class="text-center mb-8">
-            <h1 class="text-3xl font-bold text-gray-800 mb-2">🛡️ Neetrino Dashboard</h1>
+            <div class="w-16 h-16 bg-blue-600 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                <span class="text-2xl">🛡️</span>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-800 mb-2">Neetrino Dashboard</h1>
             <p class="text-gray-600">Введите данные для входа</p>
         </div>
         
@@ -93,7 +97,7 @@ $csrf_token = $auth->generateCSRFToken();
             </div>
         <?php endif; ?>
         
-        <form method="POST" class="space-y-6">
+        <form method="POST" class="space-y-5">
             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf_token) ?>">
             
             <div>
@@ -101,7 +105,7 @@ $csrf_token = $auth->generateCSRFToken();
                     👤 Логин
                 </label>
                 <input type="text" id="username" name="username" required
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                        placeholder="admin">
             </div>
             
@@ -110,19 +114,18 @@ $csrf_token = $auth->generateCSRFToken();
                     🔑 Пароль
                 </label>
                 <input type="password" id="password" name="password" required
-                       class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                        placeholder="Введите пароль">
             </div>
             
             <button type="submit" 
-                    class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200">
+                    class="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 font-medium">
                 🚀 Войти в Dashboard
             </button>
         </form>
         
         <div class="mt-6 text-center text-sm text-gray-600">
-            <p>💡 Первый вход: admin / admin123</p>
-            <p class="text-xs mt-2">Защищено Neetrino Security System</p>
+            <p class="text-xs text-gray-500">Защищено Neetrino Security System</p>
         </div>
     </div>
     
