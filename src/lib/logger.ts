@@ -1,17 +1,17 @@
 /**
  * Структурированное логирование
- * Использует pino для production и console для development
+ * pino без worker на Vercel (transport отключён), с pino-pretty локально
  */
 
 import pino from 'pino';
 import { config, isDev } from './config';
 
-// Создаём логгер
+const isVercel = typeof process !== 'undefined' && process.env.VERCEL === '1';
+
 const logger = pino({
   level: config.LOG_LEVEL,
-  
-  // Форматирование для development
-  ...(isDev && {
+  // Worker (pino-pretty) ломает сборку на Vercel — используем только локально
+  ...(isDev && !isVercel && {
     transport: {
       target: 'pino-pretty',
       options: {
@@ -21,23 +21,15 @@ const logger = pino({
       },
     },
   }),
-  
-  // Базовые поля
   base: {
     env: config.APP_ENV,
   },
 });
 
-/**
- * Логгер для конкретного модуля
- */
 export function createLogger(module: string) {
   return logger.child({ module });
 }
 
-/**
- * Логирование API запроса
- */
 export function logApiRequest(
   method: string,
   path: string,
@@ -46,9 +38,7 @@ export function logApiRequest(
   extra?: Record<string, unknown>
 ) {
   const log = logger.child({ type: 'api' });
-  
   const level = status >= 500 ? 'error' : status >= 400 ? 'warn' : 'info';
-  
   log[level]({
     method,
     path,
@@ -58,9 +48,6 @@ export function logApiRequest(
   });
 }
 
-/**
- * Логирование события безопасности
- */
 export function logSecurityEvent(
   event: string,
   ip: string,
@@ -68,9 +55,7 @@ export function logSecurityEvent(
   extra?: Record<string, unknown>
 ) {
   const log = logger.child({ type: 'security' });
-  
   const level = success ? 'info' : 'warn';
-  
   log[level]({
     event,
     ip,
@@ -79,9 +64,6 @@ export function logSecurityEvent(
   });
 }
 
-/**
- * Логирование ошибки
- */
 export function logError(error: Error, context?: Record<string, unknown>) {
   logger.error({
     error: {
