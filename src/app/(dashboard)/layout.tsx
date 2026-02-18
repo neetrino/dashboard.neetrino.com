@@ -2,6 +2,9 @@ import { auth } from '@/lib/auth';
 import { Header } from '@/components/layout/Header';
 import { redirect } from 'next/navigation';
 
+/** Не пререндерить статически — auth() использует headers() */
+export const dynamic = 'force-dynamic';
+
 /**
  * Layout для защищённых страниц дашборда
  */
