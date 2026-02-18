@@ -1,12 +1,12 @@
 // Prisma Schema для Neetrino Dashboard
-// Сгенерирован на основе существующей MySQL БД
+// PostgreSQL (Neon, Supabase и т.д.)
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

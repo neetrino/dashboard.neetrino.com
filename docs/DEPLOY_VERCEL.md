@@ -11,7 +11,7 @@
 
 | Name | Value | Обязательно |
 |------|--------|-------------|
-| `DATABASE_URL` | `mysql://user:password@host:3306/database?connection_limit=5` | Да |
+| `DATABASE_URL` | PostgreSQL URL (Neon: из Dashboard, pooler) | Да |
 | `NEXTAUTH_URL` | `https://твой-проект.vercel.app` (или свой домен) | Да |
 | `NEXTAUTH_SECRET` | Строка **не короче 32 символов** (например `openssl rand -base64 32`) | Да |
 
@@ -19,14 +19,12 @@
 
 ## 3. База данных
 
-На Vercel нет встроенного MySQL. Нужна внешняя БД:
+Используется **PostgreSQL** (Neon и др.). Рекомендуется **Neon** (бесплатный tier, serverless).
 
-- **PlanetScale** — MySQL-совместимо, есть бесплатный план.
-- **Railway** — MySQL + connection pooler.
-- **Aiven**, **DigitalOcean** и др.
+- В [Neon Dashboard](https://console.neon.tech) скопируй **connection string** (лучше pooler для serverless).
+- Формат: `postgresql://USER:PASSWORD@HOST/neondb?sslmode=require`
 
-Формат: `mysql://USER:PASSWORD@HOST:PORT/DATABASE?connection_limit=5`.  
-После деплоя выполни миграции локально, указав этот же `DATABASE_URL`:
+После деплоя примени схему к БД локально с тем же `DATABASE_URL`:
 
 ```bash
 DATABASE_URL="твой_url" npx prisma db push

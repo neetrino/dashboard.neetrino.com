@@ -45,7 +45,7 @@ function getConfig() {
     if (process.env.NODE_ENV === 'development') {
       console.warn('⚠️ Используются дефолтные значения для разработки');
       return {
-        DATABASE_URL: process.env.DATABASE_URL || 'mysql://root:@localhost:3306/dashbord_newsql1',
+        DATABASE_URL: process.env.DATABASE_URL || 'postgresql://localhost:5432/neondb',
         NEXTAUTH_URL: process.env.NEXTAUTH_URL || 'http://localhost:3000',
         NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET || 'dev-secret-change-in-production-32chars',
         APP_ENV: 'development' as const,
