@@ -1,93 +1,52 @@
-# Neetrino Project .gitignore
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
 
-# Исключаем все сайты в www кроме нашего проекта
-# Исключаем все папки в www кроме dashboard, docs
-www/*
-!www/dashboard/
-!www/docs/
-!www/README.md
-!www/PROGRESS.md
-!www/.gitignore
-# Включаем наш плагин в WordPress
-!www/website/wp-content/plugins/Neetrino/
+# Testing
+/coverage
 
-# WordPress core files (исключаем полностью)
-website/wp-admin/
-website/wp-includes/
-website/wp-*.php
-website/index.php
-website/xmlrpc.php
-website/.htaccess
-website/license.txt
-website/readme.html
+# Next.js
+/.next/
+/out/
 
-# WordPress content (исключаем все кроме нашего плагина)
-website/wp-content/themes/
-website/wp-content/uploads/
-website/wp-content/plugins/akismet/
-website/wp-content/plugins/hello.php
-website/wp-content/plugins/index.php
-website/wp-content/plugins/Neetrino3.7.0.zip
-# НЕ исключаем наш плагин: website/wp-content/plugins/Neetrino/
+# Production
+/build
 
-# WordPress config (чувствительные данные)
-website/wp-config.php
+# Misc
+.DS_Store
+*.pem
 
-# Dashboard specific
-dashboard/logs/*.log
-dashboard/.installed
-dashboard/.htaccess
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# PHP
-*.log
-*.cache
-*.tmp
-*.temp
+# Local env files
+.env*.local
+.env
+
+# Vercel
+.vercel
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts
+
+# Prisma
+/prisma/migrations
 
 # IDE
-.vscode/
 .idea/
+.vscode/
 *.swp
 *.swo
-*~
 
-# OS
-.DS_Store
-Thumbs.db
+# Logs
+logs/
+*.log
 
-# Composer
-vendor/
-composer.lock
-
-# Node.js (если будет использоваться)
-node_modules/
-npm-debug.log
-yarn-error.log
-
-# Environment files
-.env
-.env.local
-.env.production
-
-# Backup files
-*.bak
-*.backup
-*.old
-
-# Test files
-test_*.php
-*_test.php
-
-# Temporary files
-temp/
-tmp/
-cache/
-
-# Database dumps (кроме схемы)
-*.sql
-!database_schema_simple.sql
-
-# Compiled files
-*.min.js
-*.min.css
-*.map
+# Test results
+/playwright-report/
+/test-results/

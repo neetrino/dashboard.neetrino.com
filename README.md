@@ -1,72 +1,129 @@
-# Neetrino Project
+# Neetrino Dashboard (Next.js)
 
-Централизованная система управления WordPress сайтами с плагином Neetrino.
+Централизованная панель управления WordPress сайтами с плагином Neetrino.
+
+## Технологический стек
+
+- **Framework:** Next.js 14 (App Router)
+- **Language:** TypeScript
+- **ORM:** Prisma
+- **Auth:** NextAuth.js v5
+- **UI:** TailwindCSS + shadcn/ui
+- **State:** React Query + Zustand
+- **Forms:** react-hook-form + Zod
+
+## Быстрый старт
+
+### 1. Установка зависимостей
+
+```bash
+npm install
+```
+
+### 2. Настройка окружения
+
+Создайте файл `.env.local` на основе `.env.example`:
+
+```bash
+cp .env.example .env.local
+```
+
+Отредактируйте `.env.local` и укажите:
+- `DATABASE_URL` - URL подключения к MySQL
+- `NEXTAUTH_SECRET` - секретный ключ для сессий (генерируйте: `openssl rand -base64 32`)
+
+### 3. Генерация Prisma клиента
+
+```bash
+npm run db:generate
+```
+
+### 4. Запуск в режиме разработки
+
+```bash
+npm run dev
+```
+
+Откройте [http://localhost:3000](http://localhost:3000)
 
 ## Структура проекта
 
 ```
-neetrino-project/
-├── dashboard/          # Центральная панель управления
-├── website/wp-content/plugins/Neetrino/  # WordPress плагин Neetrino
-└── docs/              # Документация
+src/
+├── app/                    # Next.js App Router
+│   ├── (auth)/            # Страницы авторизации
+│   ├── (dashboard)/       # Защищённые страницы
+│   └── api/               # API Routes
+├── components/            # React компоненты
+│   ├── ui/               # shadcn/ui компоненты
+│   ├── layout/           # Layout компоненты
+│   └── sites/            # Компоненты для сайтов
+├── lib/                   # Утилиты и конфигурация
+├── services/              # Бизнес-логика
+├── schemas/               # Zod схемы валидации
+├── types/                 # TypeScript типы
+└── hooks/                 # React хуки
 ```
 
-## Компоненты
+## API Endpoints
 
-### Dashboard
-Центральная панель управления для мониторинга и управления WordPress сайтами с установленным плагином Neetrino.
+### Сайты
+- `GET /api/sites` - Список сайтов с пагинацией
+- `POST /api/sites` - Создание сайта
+- `GET /api/sites/[id]` - Получение сайта
+- `PATCH /api/sites/[id]` - Обновление сайта
+- `DELETE /api/sites/[id]` - Удаление сайта
+- `POST /api/sites/[id]/command` - Отправка команды на сайт
 
-**Функции:**
-- Мониторинг сайтов
-- Управление плагинами
-- Диагностика
-- Планировщик задач
-- Безопасность
+### Webhook'и (для плагина)
+- `POST /api/webhook/register` - Регистрация сайта
+- `POST /api/webhook/version-push` - Push версии плагина
 
-### Plugin (WordPress)
-Плагин для WordPress сайтов, обеспечивающий связь с центральной панелью.
+## Совместимость с PHP
 
-**Функции:**
-- API endpoints
-- Безопасность
-- Версионность
-- Health checks
+Next.js версия работает с той же MySQL базой данных, что и PHP версия.
+URL-редиректы настроены для совместимости:
 
-## Установка
-
-### Dashboard
-1. Скопировать папку `dashboard/` в веб-сервер
-2. Настроить базу данных
-3. Запустить `install.php`
-
-### Plugin
-1. Скопировать папку `plugin/` в `wp-content/plugins/`
-2. Активировать плагин в WordPress админке
+- `/index.php` → `/`
+- `/login.php` → `/login`
+- `/profile.php` → `/profile`
+- `/recycle_bin.php` → `/trash`
 
 ## Разработка
 
-### Требования
-- PHP 7.4+
-- MySQL 5.7+
-- WordPress 5.0+
+### Проверка типов
 
-### Структура Git
-- `main/` - основная ветка
-- `dashboard/` - папка dashboard
-- `plugin/` - папка WordPress плагина
-- `shared/` - общие функции
+```bash
+npm run type-check
+```
 
-### Теги версий
-- `v1.0.0-dashboard` - версия dashboard
-- `v1.0.0-plugin` - версия плагина
-- `v1.0.0` - общая версия
+### Линтинг
 
-## Безопасность
+```bash
+npm run lint
+```
 
-- HMAC-SHA256 подписи для API
-- Nonce для защиты от replay атак
-- Валидация версий плагинов
-- Rate limiting
+### Тесты
+
+```bash
+npm run test        # Unit тесты
+npm run test:e2e    # E2E тесты
+```
+
+## Деплой
+
+### Vercel (рекомендуется)
+
+```bash
+vercel deploy
+```
+
+### Docker
+
+```bash
+docker build -t neetrino-dashboard .
+docker run -p 3000:3000 neetrino-dashboard
+```
 
 ## Лицензия
 
