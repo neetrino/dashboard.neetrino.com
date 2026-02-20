@@ -50,3 +50,6 @@ logs/
 # Test results
 /playwright-report/
 /test-results/
+
+# Uploaded plugin package
+/data/

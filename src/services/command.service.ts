@@ -120,10 +120,10 @@ export async function getSiteInfo(site: SiteWithVersion): Promise<CommandRespons
 }
 
 /**
- * Обновление плагина
+ * Обновление плагина (команда как в плагине Neetrino)
  */
 export async function updatePlugin(site: SiteWithVersion): Promise<CommandResponse> {
-  return sendCommand(site, 'update_plugins');
+  return sendCommand(site, 'update_plugin');
 }
 
 /**

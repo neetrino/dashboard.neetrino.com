@@ -1,9 +1,10 @@
 'use client';
 
+import { useRef, useEffect } from 'react';
 import { SiteCard } from './SiteCard';
 import { Pagination } from '@/types';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Loader2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Loader2, Package } from 'lucide-react';
 import type { SiteWithVersion } from '@/types';
 
 interface SitesListProps {
@@ -12,6 +13,12 @@ interface SitesListProps {
   isLoading: boolean;
   onPageChange: (page: number) => void;
   onRefresh: () => void;
+  /** Выбранные ID для массовых действий */
+  selectedIds?: Set<number>;
+  onSelect?: (siteId: number, checked: boolean) => void;
+  /** Массовое обновление плагина */
+  onBulkUpdatePlugin?: () => void;
+  bulkUpdateProgress?: { current: number; total: number } | null;
 }
 
 export function SitesList({
@@ -19,7 +26,22 @@ export function SitesList({
   pagination,
   isLoading,
   onPageChange,
+  selectedIds = new Set(),
+  onSelect,
+  onBulkUpdatePlugin,
+  bulkUpdateProgress,
 }: SitesListProps) {
+  const selectedCount = selectedIds.size;
+  const allSelected = sites.length > 0 && selectedCount === sites.length;
+  const someSelected = selectedCount > 0;
+  const isBulkRunning = bulkUpdateProgress != null;
+
+  const handleSelectAll = () => {
+    if (!onSelect) return;
+    const next = !allSelected;
+    sites.forEach((s) => onSelect(s.id, next));
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -47,10 +69,68 @@ export function SitesList({
 
   return (
     <div className="space-y-4">
+      {/* Панель массовых действий */}
+      {(onSelect || onBulkUpdatePlugin) && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3 flex flex-wrap items-center gap-3">
+          {onSelect && (
+            <label className="flex items-center gap-2 cursor-pointer text-sm">
+              <CheckboxSelectAll
+                checked={allSelected}
+                indeterminate={someSelected && !allSelected}
+                onChange={handleSelectAll}
+              />
+              Выбрать все
+            </label>
+          )}
+          {onBulkUpdatePlugin && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onBulkUpdatePlugin}
+              disabled={selectedCount === 0 || isBulkRunning}
+            >
+              {isBulkRunning ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                  Обновление {bulkUpdateProgress!.current}/{bulkUpdateProgress!.total}
+                </>
+              ) : (
+                <>
+                  <Package className="w-4 h-4 mr-2" />
+                  Обновить плагин ({selectedCount})
+                </>
+              )}
+            </Button>
+          )}
+        </div>
+      )}
+
+      {/* Прогресс массового обновления */}
+      {isBulkRunning && bulkUpdateProgress && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-3">
+          <div className="flex justify-between text-sm text-gray-600 mb-1">
+            <span>Обновление плагина на выбранных сайтах</span>
+            <span>{bulkUpdateProgress.current} / {bulkUpdateProgress.total}</span>
+          </div>
+          <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all duration-300"
+              style={{ width: `${(bulkUpdateProgress.current / bulkUpdateProgress.total) * 100}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Список сайтов */}
       <div className="grid gap-4">
         {sites.map((site) => (
-          <SiteCard key={site.id} site={site} />
+          <SiteCard
+            key={site.id}
+            site={site}
+            showCheckbox={!!onSelect}
+            selected={selectedIds.has(site.id)}
+            onSelect={onSelect ? (checked) => onSelect(site.id, checked) : undefined}
+          />
         ))}
       </div>
 
@@ -117,6 +197,30 @@ export function SitesList({
         </div>
       )}
     </div>
+  );
+}
+
+function CheckboxSelectAll({
+  checked,
+  indeterminate,
+  onChange,
+}: {
+  checked: boolean;
+  indeterminate: boolean;
+  onChange: () => void;
+}) {
+  const ref = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (ref.current) ref.current.indeterminate = indeterminate;
+  }, [indeterminate]);
+  return (
+    <input
+      ref={ref}
+      type="checkbox"
+      checked={checked}
+      onChange={onChange}
+      className="rounded border-gray-300"
+    />
   );
 }
 

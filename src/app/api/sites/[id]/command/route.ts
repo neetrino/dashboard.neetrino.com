@@ -5,8 +5,10 @@
 
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
+import { config } from '@/lib/config';
 import { getSiteById, updateSiteStatus, updatePluginVersion } from '@/services/sites.service';
 import { sendCommand } from '@/services/command.service';
+import { getPluginPackagePath } from '@/services/settings.service';
 import { commandSchema, siteIdParamSchema } from '@/schemas/site.schema';
 import { logApiRequest, logError } from '@/lib/logger';
 
@@ -54,8 +56,19 @@ export async function POST(
       );
     }
     
-    const { command, data = {} } = validatedCommand.data;
-    
+    let { data = {} } = validatedCommand.data;
+    const command = validatedCommand.data.command;
+
+    // При обновлении плагина подставляем URL ZIP с дашборда, если он загружен
+    if (command === 'update_plugin' && site.apiKey) {
+      const packagePath = await getPluginPackagePath();
+      if (packagePath) {
+        const base = config.NEXTAUTH_URL.replace(/\/$/, '');
+        (data as Record<string, unknown>).package_url =
+          `${base}/api/plugin-package?api_key=${encodeURIComponent(site.apiKey)}`;
+      }
+    }
+
     // Отправка команды
     const result = await sendCommand(site, command, data);
     
