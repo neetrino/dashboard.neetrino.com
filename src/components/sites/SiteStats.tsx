@@ -4,19 +4,9 @@ import { useQuery } from '@tanstack/react-query';
 import { Globe, CheckCircle, XCircle, Wrench } from 'lucide-react';
 
 async function fetchStats() {
-  // Для простоты используем данные из списка сайтов
-  // В реальном приложении можно создать отдельный endpoint
-  const res = await fetch('/api/sites?perPage=1000');
+  const res = await fetch('/api/sites/stats');
   if (!res.ok) throw new Error('Failed to fetch stats');
-  const data = await res.json();
-  
-  const sites = data.items || [];
-  return {
-    total: sites.length,
-    online: sites.filter((s: { status: string }) => s.status === 'online').length,
-    offline: sites.filter((s: { status: string }) => s.status === 'offline').length,
-    maintenance: sites.filter((s: { status: string }) => s.status === 'maintenance').length,
-  };
+  return res.json();
 }
 
 export function SiteStats() {
